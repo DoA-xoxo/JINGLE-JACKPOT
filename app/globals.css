@@ -11,3 +11,5 @@
 .game-modal{max-height:90vh;overflow:auto}
 .ranking-grid article>div{min-width:0}
 .ranking-grid article>div p{line-height:1.8}
+
+.game-rule-note{margin:-12px 0 20px;padding:12px 14px;border:1px solid #d7c7a8;background:#eee4d1;color:#725c3d;font-size:10px;line-height:1.8;text-align:center}
