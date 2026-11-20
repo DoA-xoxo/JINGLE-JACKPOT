@@ -171,3 +171,12 @@
 /* Roulette always advances clockwise, including its final deceleration */
 .roulette-wheel.is-spinning{animation-name:roulette-wait-spin;animation-direction:normal}
 .roulette-wheel.is-result{transition-property:transform;transition-duration:5.6s;transition-timing-function:cubic-bezier(.08,.72,.12,1)}
+
+
+/* Mobile roulette: make the entire wheel stage a true square so its gold rim cannot squash */
+.roulette-stage{width:min(100%,300px)!important;max-width:300px;min-width:0;aspect-ratio:1/1;height:auto;padding:0!important;flex:none;}
+.roulette-wheel{position:absolute;inset:0;width:100%!important;height:100%!important;min-width:0;max-width:none;aspect-ratio:auto!important;box-sizing:border-box;border-radius:50%;}
+.roulette-wheel svg{width:100%;height:100%;aspect-ratio:auto;display:block;border-radius:50%;}
+.game-card[role="button"]{cursor:pointer;transition:transform .18s ease,border-color .18s ease;}
+.game-card[role="button"]:hover{border-color:#b99457;}
+.game-card[role="button"]:focus-visible{outline:2px solid var(--gold);outline-offset:4px;}
