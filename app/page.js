@@ -34,7 +34,7 @@ function GiftBox({ number, selected, onClick, disabled, opened }) {
 }
 
 function RouletteWheel({ spinning, result, pocketIndex }) {
-  const colors = ['#8c303b','#284b3c','#8c303b','#284b3c','#8c303b','#284b3c','#8c303b','#284b3c','#8c303b','#284b3c','#8c303b','#c49b50'];
+  const colors = ['#8c303b','#8c303b','#8c303b','#8c303b','#8c303b','#8c303b','#284b3c','#284b3c','#284b3c','#284b3c','#284b3c','#c49b50'];
   const landingAngle = Number.isInteger(pocketIndex) ? (360 - (pocketIndex * 30 + 15) + 360) % 360 : 0;
   return <div className="roulette-stage"><div className="roulette-pointer">▼</div><div className={'roulette-wheel '+(spinning?'is-spinning':result?'is-result':'')} style={result && Number.isInteger(pocketIndex)?{transform:'rotate('+(1440+landingAngle)+'deg)'}:undefined}>
     <svg viewBox="0 0 300 300" role="img" aria-label="12칸 크리스마스 룰렛">
