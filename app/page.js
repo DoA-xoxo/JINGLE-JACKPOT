@@ -112,20 +112,22 @@ export default function Home() {
         await new Promise(resolve=>setTimeout(resolve,4200));
         setRaceAnimating(false);setPlayResult(data);
       }else if(activeGame.code==='santas-slot'){
+        const spinStartedAt=Date.now();
         const data=await postGame(request,true);
-        await new Promise(resolve=>setTimeout(resolve,1800));
+        const remainingSpinTime=Math.max(0,3000-(Date.now()-spinStartedAt));
+        if(remainingSpinTime)await new Promise(resolve=>setTimeout(resolve,remainingSpinTime));
         if(data.result?.outcome?.reels)setSlotReels(data.result.outcome.reels);
         setPlayResult(data);
       }else if(activeGame.code==='frozen-roulette'){
+        setPlayResult({rouletteAnimating:true});
         const data=await postGame(request,true);
         const pocketIndex=data.result?.outcome?.pocketIndex;
         const landingAngle=Number.isInteger(pocketIndex)?(360-(pocketIndex*30+15)+360)%360:0;
         const current=((rouletteRotation%360)+360)%360;
         const nextRotation=rouletteRotation+1440+((landingAngle-current+360)%360);
         setRouletteRotation(nextRotation);
-        setPlayResult({...data,rouletteAnimating:true});
-        await new Promise(resolve=>setTimeout(resolve,3600));
         setPlayResult(data);
+        await new Promise(resolve=>setTimeout(resolve,3400));
       }else{
         await postGame(request);
       }
