@@ -29,7 +29,7 @@ function GiftBox({ number, selected, onClick, disabled, opened }) {
       <path d="M45 35h12v66H45z" fill="#d9b66f"/>
       <path d="M50 35C20 32 25 8 42 13c8 2 9 13 8 22M51 35c30-3 25-27 8-22-8 2-9 13-8 22" fill="none" stroke="#e6c77f" strokeWidth="7" strokeLinecap="round"/>
       <path d="M24 59h52M24 88h52" stroke="#b75b5b" strokeWidth="2" opacity=".65"/>
-    </svg><span>BOX {number}</span>
+    </svg><span>{opened?'OPENED':'BOX '+number}</span>
   </button>;
 }
 
