@@ -163,3 +163,11 @@
 .roulette-stage{width:min(100%,300px);max-width:300px;min-width:0}
 .roulette-wheel{display:block;width:100%;height:auto;aspect-ratio:1/1;min-width:0;flex:none;box-sizing:border-box}
 .roulette-wheel svg{display:block;width:100%;height:100%;aspect-ratio:1/1;max-width:none;box-sizing:border-box}
+
+
+/* Game selection: the game icon itself is the entry point */
+.game-icon-button{display:block;width:100%;padding:0;border:0;background:transparent;cursor:pointer;line-height:1.2;appearance:none}
+.game-icon-button:focus-visible{outline:2px solid var(--gold);outline-offset:5px;border-radius:8px}
+/* Roulette always advances clockwise, including its final deceleration */
+.roulette-wheel.is-spinning{animation-name:roulette-wait-spin;animation-direction:normal}
+.roulette-wheel.is-result{transition-property:transform;transition-duration:5.6s;transition-timing-function:cubic-bezier(.08,.72,.12,1)}
