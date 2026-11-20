@@ -47,7 +47,7 @@ The shared-auth migration already used by the gift/gacha ecosystem must have bee
 
 The gacha app reads the authoritative balance from `point_wallets.balance`, keyed by `account_id`. This project reads that same value and does not use the legacy `user_profiles.points` field.
 
-Before implementing game actions, confirm the live definitions of:
+Before enabling game actions, apply the SQL migration at `supabase/migrations/202611200001_jingle_jackpot_shared_wallet.sql` in the existing Supabase project. It extends the allowed `source_site` value with `jingle-jackpot`, creates game-round history, and adds a service-role-only atomic game RPC. Review the migration before applying it; it does not create or replace the shared wallet tables. Then confirm the live definitions of:
 
 - `public.point_wallets`
 - `public.point_transactions`
