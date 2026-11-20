@@ -21,8 +21,8 @@ function SlotMachine({ reels, spinning }) {
   </div>;
 }
 
-function GiftBox({ number, selected, onClick, disabled }) {
-  return <button type="button" className={'gift-choice '+(selected?'selected':'')} onClick={onClick} disabled={disabled} aria-label={'선물 상자 '+number}>
+function GiftBox({ number, selected, onClick, disabled, opened }) {
+  return <button type="button" className={'gift-choice '+(selected?'selected ':'')+(opened?'opened':'')} onClick={onClick} disabled={disabled} aria-label={'선물 상자 '+number}>
     <svg viewBox="0 0 100 112" role="img" aria-label="리본 선물 상자">
       <path d="M17 43h66v58H17z" fill="#8c303b" stroke="#54232a" strokeWidth="3"/>
       <path d="M12 35h76v15H12z" fill="#d4b16e" stroke="#785b34" strokeWidth="2"/>
@@ -135,12 +135,12 @@ export default function Home() {
       <p className="eyebrow">GAME NO. {activeGame.no} · JINGLE JACKPOT</p><h2>{activeGame.title}</h2><p className="auth-note">{activeGame.desc}</p><p className="game-rule-note">{activeGame.rule}</p>
 
       {activeGame.code==='santas-slot'&&<div className="game-art-panel"><SlotMachine reels={slotReels} spinning={playing}/><p className="visual-hint">세 개의 릴을 돌려 오늘의 행운을 확인하세요.</p></div>}
-      {activeGame.code==='cursed-gift'&&<div className="game-art-panel"><p className="visual-hint">마음에 드는 선물 상자 하나를 선택하세요.</p><div className="gift-grid">{[1,2,3,4,5].map(n=><GiftBox key={n} number={n} selected={selection===String(n)} onClick={()=>setSelection(String(n))} disabled={playing}/>)}</div></div>}
+      {activeGame.code==='cursed-gift'&&<div className="game-art-panel"><p className="visual-hint">마음에 드는 선물 상자 하나를 선택하세요.</p><div className="gift-grid">{[1,2,3,4,5].map(n=><GiftBox key={n} number={n} selected={selection===String(n)} opened={!!(result&&result.outcome&&result.outcome.selectedBox===n)} onClick={()=>setSelection(String(n))} disabled={playing}/>)}</div></div>}
       {activeGame.code==='frozen-roulette'&&<div className="game-art-panel"><RouletteWheel spinning={playing} result={result&&result.outcome?result.outcome.result:null}/><p className="visual-hint">먼저 행운을 걸 색을 선택하세요.</p><div className="color-bets">{[['RED','1.8×','red'],['GREEN','2.2×','green'],['GOLD','10×','gold']].map(item=><button type="button" key={item[0]} className={'color-bet '+item[2]+(selection===item[0]?' selected':'')} onClick={()=>setSelection(item[0])} disabled={playing}>{item[0]}<small>{item[1]}</small></button>)}</div></div>}
-      {activeGame.code==='reindeer-race'&&<div className="game-art-panel"><p className="visual-hint">우승할 순록을 선택하세요. 경주가 시작되면 결승선까지 달려갑니다!</p><div className="reindeer-grid">{[1,2,3,4].map(n=><button type="button" key={n} className="reindeer-button" onClick={()=>setSelection(String(n))} disabled={playing}><Reindeer number={n} selected={selection===String(n)} winner={!!(result&&result.outcome&&result.outcome.winner===n)} racing={playing}/></button>)}</div><div className={'race-track '+(playing?'race-running':'')}><span>START</span><div className="race-lanes">{[1,2,3,4].map(n=><div className="race-lane" key={n}><b className={'race-runner runner-'+n}>🦌</b></div>)}</div><i>🏁</i></div></div>}
+      {activeGame.code==='reindeer-race'&&<div className="game-art-panel"><p className="visual-hint">우승할 순록을 선택하세요. 경주가 시작되면 결승선까지 달려갑니다!</p><div className="reindeer-grid">{[1,2,3,4].map(n=><button type="button" key={n} className="reindeer-button" onClick={()=>setSelection(String(n))} disabled={playing}><Reindeer number={n} selected={selection===String(n)} winner={!!(result&&result.outcome&&result.outcome.winner===n)} racing={playing}/></button>)}</div><div className={'race-track '+(playing?'race-running ':'')+(result&&result.outcome&&result.outcome.winner?'winner-'+result.outcome.winner:'')}><span>START</span><div className="race-lanes">{[1,2,3,4].map(n=><div className="race-lane" key={n}><b className={'race-runner runner-'+n}>🦌</b></div>)}</div><i>🏁</i></div></div>}
       {activeGame.code==='last-candle'&&<div className="game-art-panel candle-panel">
         {!result&&<p className="visual-hint">베팅 후 첫 번째 촛불을 밝혀 보세요.</p>}
-        <div className="candle-row">{[1,2,3,4,5].map(n=><CandleArt key={n} lit={n<=candleStage&&result.status!=='lost'} active={playing&&n===candleStage+1}/>)}</div>
+        <div className="candle-row">{[1,2,3,4,5].map(n=><CandleArt key={n} lit={n<=candleStage} active={playing&&n===candleStage+1}/>)}</div>
         {result&&<div className="candle-status">
           {result.status==='active'&&<><strong>{candleStage}번째 촛불이 켜졌어요!</strong><p>지금 멈추면 {({1:'1.15',2:'1.45',3:'1.85',4:'2.4',5:'3'})[candleStage]}배를 받을 수 있어요.</p></>}
           {result.status==='lost'&&<><strong>촛불이 꺼졌어요…</strong><p>이번 라운드 당첨금은 0P입니다.</p></>}
