@@ -33,9 +33,10 @@ function GiftBox({ number, selected, onClick, disabled, opened }) {
   </button>;
 }
 
-function RouletteWheel({ spinning, result }) {
+function RouletteWheel({ spinning, result, pocketIndex }) {
   const colors = ['#8c303b','#284b3c','#8c303b','#284b3c','#8c303b','#284b3c','#8c303b','#284b3c','#8c303b','#284b3c','#8c303b','#c49b50'];
-  return <div className="roulette-stage"><div className="roulette-pointer">▼</div><div className={'roulette-wheel '+(spinning?'is-spinning':result?'is-result':'')} style={result?{transform:'rotate('+(1440+({RED:0,GREEN:30,GOLD:330}[result]||0))+'deg)'}:undefined}>
+  const landingAngle = Number.isInteger(pocketIndex) ? (360 - (pocketIndex * 30 + 15) + 360) % 360 : 0;
+  return <div className="roulette-stage"><div className="roulette-pointer">▼</div><div className={'roulette-wheel '+(spinning?'is-spinning':result?'is-result':'')} style={result && Number.isInteger(pocketIndex)?{transform:'rotate('+(1440+landingAngle)+'deg)'}:undefined}>
     <svg viewBox="0 0 300 300" role="img" aria-label="12칸 크리스마스 룰렛">
       {colors.map((color,i)=><path key={i} d="M150 150 L150 12 A138 138 0 0 1 219 30 Z" fill={color} stroke="#f0dfbd" strokeWidth="2" transform={'rotate('+(i*30)+' 150 150)'}/>)}
       <circle cx="150" cy="150" r="29" fill="#e7d3a9" stroke="#76502f" strokeWidth="5"/><circle cx="150" cy="150" r="9" fill="#7a2934"/>
@@ -136,7 +137,7 @@ export default function Home() {
 
       {activeGame.code==='santas-slot'&&<div className="game-art-panel"><SlotMachine reels={slotReels} spinning={playing}/><p className="visual-hint">세 개의 릴을 돌려 오늘의 행운을 확인하세요.</p></div>}
       {activeGame.code==='cursed-gift'&&<div className="game-art-panel"><p className="visual-hint">마음에 드는 선물 상자 하나를 선택하세요.</p><div className="gift-grid">{[1,2,3,4,5].map(n=><GiftBox key={n} number={n} selected={selection===String(n)} opened={!!(result&&result.outcome&&result.outcome.selectedBox===n)} onClick={()=>setSelection(String(n))} disabled={playing}/>)}</div></div>}
-      {activeGame.code==='frozen-roulette'&&<div className="game-art-panel"><RouletteWheel spinning={playing} result={result&&result.outcome?result.outcome.result:null}/><p className="visual-hint">먼저 행운을 걸 색을 선택하세요.</p><div className="color-bets">{[['RED','1.8×','red'],['GREEN','2.2×','green'],['GOLD','10×','gold']].map(item=><button type="button" key={item[0]} className={'color-bet '+item[2]+(selection===item[0]?' selected':'')} onClick={()=>setSelection(item[0])} disabled={playing}>{item[0]}<small>{item[1]}</small></button>)}</div></div>}
+      {activeGame.code==='frozen-roulette'&&<div className="game-art-panel"><RouletteWheel spinning={playing} result={result&&result.outcome?result.outcome.result:null} pocketIndex={result&&result.outcome?result.outcome.pocketIndex:null}/><p className="visual-hint">먼저 행운을 걸 색을 선택하세요.</p><div className="color-bets">{[['RED','1.8×','red'],['GREEN','2.2×','green'],['GOLD','10×','gold']].map(item=><button type="button" key={item[0]} className={'color-bet '+item[2]+(selection===item[0]?' selected':'')} onClick={()=>setSelection(item[0])} disabled={playing}>{item[0]}<small>{item[1]}</small></button>)}</div></div>}
       {activeGame.code==='reindeer-race'&&<div className="game-art-panel"><p className="visual-hint">우승할 순록을 선택하세요. 경주가 시작되면 결승선까지 달려갑니다!</p><div className="reindeer-grid">{[1,2,3,4].map(n=><button type="button" key={n} className="reindeer-button" onClick={()=>setSelection(String(n))} disabled={playing}><Reindeer number={n} selected={selection===String(n)} winner={!!(result&&result.outcome&&result.outcome.winner===n)} racing={playing}/></button>)}</div><div className={'race-track '+(playing?'race-running ':'')+(result&&result.outcome&&result.outcome.winner?'winner-'+result.outcome.winner:'')}><span>START</span><div className="race-lanes">{[1,2,3,4].map(n=><div className="race-lane" key={n}><b className={'race-runner runner-'+n}>🦌</b></div>)}</div><i>🏁</i></div></div>}
       {activeGame.code==='last-candle'&&<div className="game-art-panel candle-panel">
         {!result&&<p className="visual-hint">베팅 후 첫 번째 촛불을 밝혀 보세요.</p>}
