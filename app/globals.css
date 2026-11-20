@@ -256,3 +256,25 @@
   animation:none!important;
   transition:none!important;
 }
+
+
+/* Odd / even card game */
+.odd-even-panel{padding-top:20px;padding-bottom:22px}
+.number-card{width:150px;height:205px;margin:14px auto 22px;perspective:900px}
+.number-card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .85s cubic-bezier(.2,.72,.2,1)}
+.number-card.revealed .number-card-inner{transform:rotateY(180deg)}
+.number-card.flipping .number-card-inner{animation:card-reveal .85s cubic-bezier(.2,.72,.2,1) forwards}
+@keyframes card-reveal{to{transform:rotateY(180deg)}}
+.number-card-back,.number-card-front{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;backface-visibility:hidden;border:5px double #c9a96d;box-shadow:0 8px 18px #49352625}
+.number-card-back{background:#742b35;color:#f4eddf;outline:1px solid #742b35;outline-offset:5px}
+.number-card-back span:first-child{font-size:23px;color:#d9b66f}
+.number-card-back strong{font:700 88px/.95 'Playfair Display',serif;color:#e8d6b2}
+.number-card-back span:last-child{font:8px 'DM Mono',monospace;letter-spacing:1.5px;margin-top:9px}
+.number-card-front{transform:rotateY(180deg);background:#fff8e9;color:#742b35}
+.number-card-front small,.number-card-front span{font:9px 'DM Mono',monospace;letter-spacing:1.5px;color:#9b783f}
+.number-card-front strong{font:700 76px/.95 'Playfair Display',serif;margin:12px 0}
+.odd-even-bets{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:330px;margin:auto}
+.odd-even-choice{padding:14px 8px;border:1px solid #bca47e;background:#f8efdd;color:#742b35;font:700 17px 'Noto Sans KR',sans-serif;cursor:pointer}
+.odd-even-choice small{display:block;margin-top:4px;font:9px 'DM Mono',monospace;letter-spacing:1.5px;color:#9b783f}
+.odd-even-choice.selected{background:#742b35;color:#f4eddf;border-color:#742b35;outline:3px solid #d4b16e;outline-offset:2px}
+.odd-even-choice:disabled{cursor:default;opacity:.75}
