@@ -5,7 +5,7 @@ import { resolveGame } from '@/lib/game-engine';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const allowedGames = new Set(['santas-slot', 'cursed-gift', 'frozen-roulette', 'reindeer-race', 'last-candle']);
+const allowedGames = new Set(['santas-slot', 'cursed-gift', 'frozen-roulette', 'reindeer-race', 'last-candle', 'odd-even']);
 
 function getResultLabel(gameCode, outcome) {
   if (gameCode === 'santas-slot') return ({ TRIPLE: 'THREE OF A KIND!', PAIR: 'A LUCKY PAIR!', MISS: 'NO MATCH THIS TIME' })[outcome.result] || 'THE REELS HAVE STOPPED';
@@ -13,6 +13,7 @@ function getResultLabel(gameCode, outcome) {
   if (gameCode === 'frozen-roulette') return outcome.result === outcome.selection ? 'THE WHEEL FAVOURS YOU!' : `THE WHEEL LANDED ON ${outcome.result}`;
   if (gameCode === 'reindeer-race') return outcome.winner === outcome.selected ? `REINDEER ${outcome.winner} WINS!` : `REINDEER ${outcome.winner} TAKES THE LEAD!`;
   if (gameCode === 'last-candle') return outcome.status === 'active' ? 'A CANDLE IS LIT!' : outcome.status === 'completed' ? (outcome.stage === 5 ? 'ALL FIVE CANDLES ARE BURNING!' : 'A WISE MOMENT TO COLLECT!') : 'THE FLAME WENT OUT...';
+  if (gameCode === 'odd-even') return outcome.correct ? 'YOU GUESSED IT!' : 'NOT THIS TIME...';
   return 'THE GAME IS OVER';
 }
 
