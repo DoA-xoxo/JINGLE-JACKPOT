@@ -32,7 +32,7 @@ function GiftBox({ number, selected, onClick, disabled, opened }) {
   return <button type="button" className={'gift-choice '+(selected?'selected ':'')+(opened?'opened':'')} onClick={onClick} disabled={disabled} aria-label={'선물 상자 '+number}>
     <svg viewBox="0 0 100 112" role="img" aria-label={opened?"뚜껑이 열린 선물 상자":"리본 선물 상자"}>
       <path d="M17 35h66v66H17z" fill="#8c303b" stroke="#54232a" strokeWidth="3"/>
-      {!opened&&<path d="M12 27h76v15H12z" fill="#d4b16e" stroke="#785b34" strokeWidth="2"}/>
+      {opened ? null : <path d="M12 27h76v15H12z" fill="#d4b16e" stroke="#785b34" strokeWidth="2" /> }
       <path d="M45 35h12v66H45z" fill="#d9b66f"/>
       {opened ? null : <path d="M50 35C20 32 25 8 42 13c8 2 9 13 8 22M51 35c30-3 25-27 8-22-8 2-9 13-8 22" fill="none" stroke="#e6c77f" strokeWidth="7" strokeLinecap="round" /> }
     </svg><span>{opened?'OPENED':'BOX '+number}</span>
