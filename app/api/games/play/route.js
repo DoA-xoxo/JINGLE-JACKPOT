@@ -26,11 +26,11 @@ export async function POST(request) {
     const wagerText = String(body.wager ?? '');
     const requestId = String(body.requestId || '');
     if (!allowedGames.has(gameCode)) return jsonError('지원하지 않는 게임입니다.');
-    if (!/^\d+$/.test(wagerText)) return jsonError('베팅 금액은 1 이상의 정수로 입력해 주세요.');
+    if (gameCode !== 'last-candle' && !/^[0-9]+$/.test(wagerText)) return jsonError('베팅 금액은 1 이상의 정수로 입력해 주세요.');
 
-    const wager = BigInt(wagerText);
+    const wager = gameCode === 'last-candle' ? 0n : BigInt(wagerText);
     // Technical safe-integer ceiling keeps even a 10x payout exactly representable.
-    if (wager < 1n || wager > 900719925474099n) return jsonError('베팅 금액을 안전한 정수 범위로 입력해 주세요.');
+    if (gameCode !== 'last-candle' && (wager < 1n || wager > 900719925474099n)) return jsonError('베팅 금액을 안전한 정수 범위로 입력해 주세요.');
     if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestId)) {
       return jsonError('요청 식별자가 올바르지 않습니다.');
     }
@@ -48,7 +48,7 @@ export async function POST(request) {
       let sessionId = body.sessionId || null;
       if (action === 'start') {
         const wagerText = String(body.wager ?? '');
-        if (!/^\\d+$/.test(wagerText)) return jsonError('베팅 금액은 1 이상의 정수로 입력해 주세요.');
+        if (!/^[0-9]+$/.test(wagerText)) return jsonError('베팅 금액은 1 이상의 정수로 입력해 주세요.');
         candleWager = BigInt(wagerText);
         if (candleWager < 1n || candleWager > 900719925474099n) return jsonError('베팅 금액을 안전한 정수 범위로 입력해 주세요.');
         sessionId = randomUUID();
