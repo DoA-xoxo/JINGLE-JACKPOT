@@ -124,7 +124,8 @@ export default function Home() {
         const pocketIndex=data.result?.outcome?.pocketIndex;
         const landingAngle=Number.isInteger(pocketIndex)?(360-(pocketIndex*30+15)+360)%360:0;
         const current=((rouletteRotation%360)+360)%360;
-        const nextRotation=rouletteRotation+1440+((landingAngle-current+360)%360);
+        const clockwiseDelta=(landingAngle-current+360)%360;
+        const nextRotation=rouletteRotation+1440+clockwiseDelta;
         setRouletteRotation(nextRotation);
         setPlayResult(data);
         await new Promise(resolve=>setTimeout(resolve,5600));
@@ -162,7 +163,7 @@ export default function Home() {
     </section>
 
     <section className="section" id="games"><div className="section-heading"><div><p className="eyebrow">PICK YOUR POISON</p><h2>THE GAME <em>ROOM</em></h2></div><p>오늘의 행운은 어떤 모습일까요?</p></div>
-      <div className="game-grid">{games.map(g=><article className={'game-card '+g.color} key={g.no}><div className="game-card-top"><span>GAME NO. {g.no}</span><span>✦</span></div><div className="game-symbol">{g.code==='santas-slot'?'🎰':g.code==='cursed-gift'?'🎁':g.code==='frozen-roulette'?'🎡':g.code==='reindeer-race'?'🦌':'🕯️'}</div><div className="game-type">{g.type}</div><h3>{g.title}</h3><p>{g.desc}</p><button className="play-btn" onClick={()=>openGame(g)}>ENTER GAME <span>↗</span></button></article>)}</div>
+      <div className="game-grid">{games.map(g=><article className={'game-card '+g.color} key={g.no}><div className="game-card-top"><span>GAME NO. {g.no}</span><span>✦</span></div><button type="button" className="game-symbol game-icon-button" aria-label={g.title+' 게임 열기'} onClick={()=>openGame(g)}>{g.code==='santas-slot'?'🎰':g.code==='cursed-gift'?'🎁':g.code==='frozen-roulette'?'🎡':g.code==='reindeer-race'?'🦌':'🕯️'}</button><div className="game-type">{g.type}</div><h3>{g.title}</h3><p>{g.desc}</p></article>)}</div>
     </section>
 
     <section className="events-section lottery-section" id="lottery"><div className="lottery-copy"><p className="eyebrow">ONLY THIS SEASON</p><h2>CHRISTMAS <em>LOTTERY</em></h2><p>크리스마스 시즌에 찾아오는 단 하나의 특별 추첨.</p><span className="coming">COMING SOON</span></div><div className="lottery-ticket"><span>✦ THE CHRISTMAS DRAW ✦</span><strong>LUCKY<br/>NUMBER</strong><i>NO. 1225</i><small>ONE TICKET · ONE WISH</small></div></section>
