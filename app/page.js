@@ -91,6 +91,7 @@ export default function Home() {
   async function playGame(e){
     e.preventDefault();if(!user){setActiveGame(null);setMode('login');setAuthOpen(true);return;}
     setPlaying(true);setPlayResult(null);
+    if(activeGame.code==='reindeer-race'){setRaceOutcome(null);setRaceAnimating(false);}
     try{
       if(activeGame.code==='santas-slot')setSlotReels(['BELL','STAR','TREE']);
       const request={gameCode:activeGame.code,wager,selection,requestId:crypto.randomUUID()};
@@ -154,7 +155,7 @@ export default function Home() {
 
     <section className="events-section lottery-section" id="lottery"><div className="lottery-copy"><p className="eyebrow">ONLY THIS SEASON</p><h2>CHRISTMAS <em>LOTTERY</em></h2><p>크리스마스 시즌에 찾아오는 단 하나의 특별 추첨.</p><span className="coming">COMING SOON</span></div><div className="lottery-ticket"><span>✦ THE CHRISTMAS DRAW ✦</span><strong>LUCKY<br/>NUMBER</strong><i>NO. 1225</i><small>ONE TICKET · ONE WISH</small></div></section>
 
-    <section className="hall" id="rankings"><p className="eyebrow">A PLACE FOR THE LUCKIEST</p><h2>HALL OF <em>FAME</em></h2><div className="ranking-grid"><article><span className="rank-icon">♛</span><div><small>LUCKY STAR</small><h3>BIGGEST WINNINGS</h3><p>누적 당첨금 랭킹</p>{boards.luckyStar&&boards.luckyStar.slice(0,5).map((x,i)=><p key={x.nickname}>{i+1}. {x.nickname} · {Number(x.winnings).toLocaleString()} P</p>)}</div><b>{boards.luckyStar&&boards.luckyStar.length?'TOP 5':'—'}</b></article><article><span className="rank-icon">✦</span><div><small>ONE IN A MILLION</small><h3>BIGGEST JACKPOT</h3><p>단일 게임 최고 당첨 기록</p>{boards.biggestJackpot&&boards.biggestJackpot.slice(0,5).map((x,i)=><p key={x.nickname}>{i+1}. {x.nickname} · {Number(x.winnings).toLocaleString()} P</p>)}</div><b>{boards.biggestJackpot&&boards.biggestJackpot.length?'TOP 5':'—'}</b></article></div></section>
+    <section className="hall" id="rankings"><p className="eyebrow">A PLACE FOR THE LUCKIEST</p><h2>HALL OF <em>FAME</em></h2><div className="ranking-grid cumulative-ranking"><article><span className="rank-icon">♛</span><div><small>LUCKY STAR</small><h3>CUMULATIVE WINNINGS</h3><p>누적 당첨금 랭킹</p>{boards.luckyStar&&boards.luckyStar.slice(0,10).map((x,i)=><p key={x.nickname}>{i+1}. {x.nickname} · {Number(x.winnings).toLocaleString()} P</p>)}</div><b>{boards.luckyStar&&boards.luckyStar.length?'TOP 10':'—'}</b></article></div></div></section>
     <footer><div className="footer-mark">JINGLE <i>✦</i> JACKPOT!</div><p>A LITTLE CHRISTMAS, A LOT OF LUCK!</p><small>© 2026 JINGLE JACKPOT! · VIRTUAL POINTS HAVE NO CASH VALUE</small></footer>
 
     {activeGame&&<div className="modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget&&!playing)setActiveGame(null);}}><form className="auth-modal game-modal" onSubmit={activeGame.code==='last-candle'?e=>{e.preventDefault();candleAction('start');}:playGame}>
