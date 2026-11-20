@@ -68,12 +68,13 @@ function RouletteWheel({ spinning, result, pocketIndex, rotation }) {
       active.cancel();
       let targetAngle = Number(rotation || 0);
       while (targetAngle < startAngle + 720) targetAngle += 360;
+      const settleDuration = Math.round((targetAngle - startAngle) / 288 * 1000);
       const settle = wheel.animate(
         [
           { transform: 'rotate(' + startAngle + 'deg)' },
           { transform: 'rotate(' + targetAngle + 'deg)' }
         ],
-        { duration: 4600, easing: 'cubic-bezier(0.18, 0.72, 0.16, 1)', fill: 'forwards' }
+        { duration: settleDuration, easing: 'cubic-bezier(0.25, 0.25, 0.5, 1)', fill: 'forwards' }
       );
       animationRef.current = settle;
       settle.onfinish = () => {
