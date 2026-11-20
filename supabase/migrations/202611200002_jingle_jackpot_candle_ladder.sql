@@ -180,3 +180,6 @@ $function$;
 
 REVOKE ALL ON FUNCTION public.play_jingle_candle_step(uuid, text, uuid, bigint, boolean, text) FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION public.play_jingle_candle_step(uuid, text, uuid, bigint, boolean, text) TO service_role;
+
+-- Refresh PostgREST's function cache so the candle RPC is callable immediately.
+NOTIFY pgrst, 'reload schema';
