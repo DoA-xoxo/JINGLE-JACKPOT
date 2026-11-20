@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const games = [
   { no:'01', title:"SANTA'S SLOT", type:'THE CLASSIC', desc:'세 개의 릴이 멈추는 순간, 산타의 선물이 결정돼요.', rule:'세 그림 일치 8 배 · 두 그림 일치 1.2 배 · 그 외 0 배', color:'red', code:'santas-slot' },
@@ -41,13 +41,56 @@ function GiftBox({ number, selected, onClick, disabled, opened }) {
 
 function RouletteWheel({ spinning, result, pocketIndex, rotation }) {
   const colors = ['#8c303b','#284b3c','#8c303b','#284b3c','#8c303b','#284b3c','#8c303b','#284b3c','#8c303b','#284b3c','#8c303b','#c49b50'];
-  const wheelStyle = {
-    transform: 'rotate(' + (rotation || 0) + 'deg)',
-    '--roulette-target': (rotation || 0) + 'deg'
-  };
+  const wheelRef = useRef(null);
+  const animationRef = useRef(null);
+  const baseRotationRef = useRef(rotation || 0);
+
+  useEffect(() => {
+    const wheel = wheelRef.current;
+    if (!wheel) return;
+    if (spinning) {
+      if (animationRef.current) animationRef.current.cancel();
+      baseRotationRef.current = rotation || 0;
+      animationRef.current = wheel.animate(
+        [
+          { transform: 'rotate(' + baseRotationRef.current + 'deg)' },
+          { transform: 'rotate(' + (baseRotationRef.current + 360) + 'deg)' }
+        ],
+        { duration: 1250, iterations: Infinity, easing: 'linear' }
+      );
+      return;
+    }
+    if (animationRef.current && result) {
+      const active = animationRef.current;
+      const elapsed = Number(active.currentTime || 0);
+      const startAngle = baseRotationRef.current + elapsed / 1250 * 360;
+      active.cancel();
+      let targetAngle = Number(rotation || 0);
+      while (targetAngle < startAngle + 720) targetAngle += 360;
+      const settle = wheel.animate(
+        [
+          { transform: 'rotate(' + startAngle + 'deg)' },
+          { transform: 'rotate(' + targetAngle + 'deg)' }
+        ],
+        { duration: 4400, easing: 'cubic-bezier(0.12, 0.58, 0.18, 1)', fill: 'forwards' }
+      );
+      animationRef.current = settle;
+      settle.onfinish = () => {
+        baseRotationRef.current = targetAngle;
+        wheel.style.transform = 'rotate(' + targetAngle + 'deg)';
+        settle.cancel();
+        animationRef.current = null;
+      };
+    }
+  }, [spinning, result, rotation]);
+
+  useEffect(() => () => {
+    if (animationRef.current) animationRef.current.cancel();
+  }, []);
+
   return <div className="roulette-stage">
     <div className="roulette-pointer">▼</div>
-    <div className={'roulette-wheel ' + (spinning ? 'is-spinning' : result ? 'is-result' : '')} style={wheelStyle}>
+    <div ref={wheelRef} className="roulette-wheel" style={{ transform: 'rotate(' + (rotation || 0) + 'deg)' }}>
       <svg viewBox="0 0 300 300" role="img" aria-label="12칸 크리스마스 룰렛">
         {colors.map((color, i) => <path key={i} d="M150 150 L150 12 A138 138 0 0 1 219 30 Z" fill={color} stroke="#f0dfbd" strokeWidth="2" transform={'rotate(' + (i * 30) + ' 150 150)'} />)}
         <circle cx="150" cy="150" r="29" fill="#e7d3a9" stroke="#76502f" strokeWidth="5" />
@@ -124,10 +167,10 @@ export default function Home() {
         const landingAngle=Number.isInteger(pocketIndex)?(360-(pocketIndex*30+15)+360)%360:0;
         const current=((rouletteRotation%360)+360)%360;
         const clockwiseDelta=(landingAngle-current+360)%360;
-        const nextRotation=rouletteRotation+1080+clockwiseDelta;
+        const nextRotation=rouletteRotation+720+clockwiseDelta;
         setRouletteRotation(nextRotation);
         setPlayResult(data);
-        await new Promise(resolve=>setTimeout(resolve,8800));
+        await new Promise(resolve=>setTimeout(resolve,4700));
       }else{
         await postGame(request);
       }
