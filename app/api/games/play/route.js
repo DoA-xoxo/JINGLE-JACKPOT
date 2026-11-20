@@ -65,8 +65,8 @@ export async function POST(request) {
         p_account_id: profile.account_id,
         p_action: action,
         p_session_id: sessionId,
-        p_wager: candleWager?.toString() ?? null,
-        p_success: action === 'stop' ? null : randomInt(100) < 80,
+        p_wager: candleWager?.toString() ?? '0',
+        p_success: action === 'stop' ? false : randomInt(100) < 80,
         p_idempotency_key: idempotencyKey,
       });
       if (error) {
