@@ -88,7 +88,6 @@
 @media(max-width:850px){.lottery-section{padding:55px 7%;grid-template-columns:1fr 220px}.game-modal{width:min(100%,580px)}}
 @media(max-width:540px){.game-modal{padding:30px 20px;max-height:94vh}.game-art-panel{padding:14px 9px}.gift-grid{gap:2px}.gift-choice{font-size:7px}.gift-choice svg{max-width:62px}.slot-machine-visual{width:90%;padding:12px 15px}.slot-reel{height:67px}.slot-reel span{font-size:34px}.reindeer-grid{gap:2px}.reindeer-choice{min-height:105px}.reindeer-choice b{font-size:6px}.reindeer-choice small{font-size:6px}.candle-actions{grid-template-columns:1fr}.lottery-section{grid-template-columns:1fr;gap:32px;text-align:center}.lottery-ticket{width:210px}.lottery-copy .coming{margin-top:4px}}
 
-.roulette-wheel.is-result{transition:none;transform:rotate(0deg)}
 .race-track{height:auto;min-height:92px;position:relative;align-items:stretch;padding:7px 0 5px}
 .race-track>span{position:absolute;left:0;top:-9px;background:#eee3cf;padding-right:5px}
 .race-track>i{position:absolute;right:0;top:2px;height:78px;display:flex;align-items:center;background:#eee3cf;padding-left:3px;z-index:2}
@@ -138,3 +137,7 @@
 .race-running.winner-3 .runner-3,.race-finished.winner-3 .runner-3{--race-stop:calc(100% - 22px)}
 .race-running.winner-4 .runner-4,.race-finished.winner-4 .runner-4{--race-stop:calc(100% - 22px)}
 .race-finished .race-runner{left:var(--race-stop)}
+
+
+/* Roulette keeps its accumulated angle between consecutive spins */
+.roulette-wheel.is-result{transition:none}
