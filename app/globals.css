@@ -141,3 +141,14 @@
 
 /* Roulette keeps its accumulated angle between consecutive spins */
 .roulette-wheel.is-result{transition:none}
+
+
+/* Race lanes: reset at the next play and keep the reindeer fully visible above the track line */
+.race-lanes,.race-lane{overflow:visible!important}
+.race-lane{height:23px;position:relative}
+.race-runner{top:-11px;z-index:3;font-size:23px;line-height:1;white-space:nowrap}
+.race-running.winner-1 .runner-1,.race-finished.winner-1 .runner-1,
+.race-running.winner-2 .runner-2,.race-finished.winner-2 .runner-2,
+.race-running.winner-3 .runner-3,.race-finished.winner-3 .runner-3,
+.race-running.winner-4 .runner-4,.race-finished.winner-4 .runner-4{left:calc(100% - 38px)}
+.cumulative-ranking{grid-template-columns:minmax(0,1fr);max-width:760px;margin:0 auto}
