@@ -115,7 +115,7 @@ export default function Home() {
 
     {activeGame && <div className="modal-backdrop" onMouseDown={(e) => { if(e.target===e.currentTarget && !playing) setActiveGame(null); }}><form className="auth-modal game-modal" onSubmit={playGame}>
       <button type="button" className="modal-close" onClick={()=>setActiveGame(null)} disabled={playing}>×</button>
-      <p className="eyebrow">GAME NO. {activeGame.no} · JINGLE JACKPOT</p><h2>{activeGame.title}</h2><p className="auth-note">{activeGame.desc}</p>
+      <p className="eyebrow">GAME NO. {activeGame.no} · JINGLE JACKPOT</p><h2>{activeGame.title}</h2><p className="auth-note">{activeGame.desc}</p><p className="game-rule-note">{activeGame.rule}</p>
       <label>YOUR WAGER (P)<input inputMode="numeric" pattern="[0-9]*" value={wager} onChange={e=>setWager(e.target.value.replace(/[^0-9]/g,''))} required /></label>
       {activeGame.code === 'cursed-gift' && <label>CHOOSE A GIFT BOX<select value={selection} onChange={e=>setSelection(e.target.value)}>{[1,2,3,4,5].map(n=><option key={n} value={n}>BOX {n}</option>)}</select></label>}
       {activeGame.code === 'frozen-roulette' && <label>CHOOSE A COLOR<select value={selection} onChange={e=>setSelection(e.target.value)}><option value="RED">RED</option><option value="GREEN">GREEN</option><option value="GOLD">GOLD</option></select></label>}
