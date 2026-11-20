@@ -54,7 +54,6 @@ function RouletteWheel({ spinning, result, pocketIndex, rotation }) {
         <circle cx="150" cy="150" r="9" fill="#7a2934" />
       </svg>
     </div>
-    <div className="roulette-label">FROZEN FORTUNE</div>
   </div>;
 }
 
