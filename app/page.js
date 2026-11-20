@@ -147,7 +147,7 @@ export default function Home() {
   async function postGame(body, deferResult=false){
     const res=await fetch('/api/games/play',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     const data=await res.json();if(!res.ok)throw new Error(data.error||'게임을 진행하지 못했습니다.');
-    if(!deferResult)setPlayResult(data);if(data.result&&data.result.balance!==undefined)await refreshUser();refreshBoards();return data;
+    if(!deferResult)setPlayResult(data);if(data.result&&data.result.balance!==undefined){if(deferResult)refreshUser().catch(()=>{});else await refreshUser();}refreshBoards();return data;
   }
 
   async function playGame(e){
