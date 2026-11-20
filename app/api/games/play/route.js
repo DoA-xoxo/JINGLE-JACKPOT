@@ -1,4 +1,3 @@
-import { randomUUID } from 'node:crypto';
 import { getSupabaseAdmin, getUserId, jsonError } from '@/lib/server';
 import { resolveGame } from '@/lib/game-engine';
 
@@ -41,9 +40,10 @@ export async function POST(request) {
       if (/포인트가 부족합니다/.test(error.message)) return jsonError(error.message, 409);
       throw error;
     }
+    const savedOutcome = data?.outcome || outcome;
     return Response.json({
       result: data,
-      resultLabel: outcome.result || outcome.prize || (outcome.success ? 'ALL CANDLES LIT' : outcome.winner ? `WINNER: ${outcome.winner}` : outcome.lit !== undefined ? `${outcome.lit}/${outcome.stages} CANDLES` : 'RESULT'),
+      resultLabel: savedOutcome.result || savedOutcome.prize || (savedOutcome.success ? 'ALL CANDLES LIT' : savedOutcome.winner ? `WINNER: ${savedOutcome.winner}` : savedOutcome.lit !== undefined ? `${savedOutcome.lit}/${savedOutcome.stages} CANDLES` : 'RESULT'),
     });
   } catch (error) {
     console.error('Jingle Jackpot game failed:', error);
