@@ -9,7 +9,7 @@ A vintage Christmas game parlour built with Next.js 15, React, and Supabase.
 - Password compatibility with the shared gift / gacha accounts (scrypt and legacy bcrypt).
 - Profile linking through `public.user_profiles.account_id`.
 - Read-only display of the existing shared point balance from `public.point_wallets.balance`.
-- Five server-resolved games, three seasonal event panels, and two leaderboard panels.
+- Five server-resolved games with illustrated, interactive game panels; one Christmas lottery feature panel; and two leaderboard panels.
 
 ## Shared account and points
 
@@ -26,7 +26,7 @@ A new account created here is stored in `event_users`, so it can be used on the 
 
 ## Database migration — required before gameplay
 
-Apply `supabase/migrations/202611200001_jingle_jackpot_shared_wallet.sql` in the existing Supabase project before enabling gameplay in a public deployment.
+The shared-wallet migration `supabase/migrations/202611200001_jingle_jackpot_shared_wallet.sql` has already been applied. Apply the additional migration `supabase/migrations/202611200002_jingle_jackpot_candle_ladder.sql` in the same Supabase project before using the redesigned Last Candle game.
 
 The migration:
 
@@ -35,7 +35,7 @@ The migration:
 3. Adds the service-role-only `play_jingle_game` RPC. It debits the wager, credits the payout, and records the round in one database transaction with idempotency protection.
 4. Adds the service-role-only `get_jingle_leaderboards` RPC.
 
-It does not create, replace, or reset the shared wallet tables. Review the SQL before applying it. The migration has been prepared in this repository but must still be applied manually to the existing Supabase project.
+Neither migration creates, replaces, or resets the shared wallet tables. Review the new SQL before applying it.
 
 ## Game rules
 
@@ -49,7 +49,7 @@ All outcomes are generated on the server with Node's cryptographic random number
 | The Cursed Gift | One of five shuffled boxes: 1 jackpot, 1 lucky, 1 small, 2 empty | 2.5x / 1.5x / 1x / 0x |
 | Frozen Roulette | 12 pockets: 6 red, 5 green, 1 gold | Red 1.8x / Green 2.2x / Gold 10x |
 | Reindeer Race | Four reindeer with 40% / 30% / 20% / 10% win probabilities | 2.2x / 3x / 4.5x / 8x |
-| The Last Candle | Each candle has an independent 80% chance to stay lit; all selected candles must stay lit | 1 candle 1.15x, 2 candles 1.45x, 3 candles 1.85x, 4 candles 2.4x, 5 candles 3x |
+| The Last Candle | Each candle has an independent 80% chance to light; after each success, stop to collect or risk the next candle, up to five total | 1 candle 1.15x, 2 candles 1.45x, 3 candles 1.85x, 4 candles 2.4x, 5 candles 3x |
 
 A payout is the total amount credited, including the wager amount. For example, a 100P wager with a 200P payout increases the wallet by 100P net.
 
