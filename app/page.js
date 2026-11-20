@@ -203,7 +203,7 @@ export default function Home() {
     <section className="hero">
       <div className="hero-copy"><p className="eyebrow">A LITTLE CHRISTMAS, A LOT OF LUCK!</p><h1>LET THE<br/><em>HOLIDAY</em><br/>MAGIC BEGIN.</h1><p className="hero-desc">반짝이는 선물과 조금은 위험한 행운이 기다리는<br/>빈티지 크리스마스 게임 파를러에 오신 걸 환영해요.</p><a className="cta" href="#games">FIND YOUR FORTUNE <span>↗</span></a></div>
       <div className="hero-art"><div className="ornament ornament-one">✳</div><div className="poster"><span className="poster-top">A VERY MERRY</span><strong>CHRIST<br/>MAS!</strong><span className="poster-star">✦</span><span className="poster-bottom">LUCK IS IN THE AIR · 2026</span></div><div className="seal">GOOD<br/>LUCK<br/><b>✦</b></div></div>
-      <div className="hero-foot"><span>★ 5 GAMES TO PLAY</span><span>★ 1 CHRISTMAS LOTTERY</span><span>★ ONE VERY LUCKY YOU</span></div>
+      <div className="hero-foot"><span>★ 6 GAMES TO PLAY</span><span>★ 1 CHRISTMAS LOTTERY</span><span>★ ONE VERY LUCKY YOU</span></div>
     </section>
 
     <section className="section" id="games"><div className="section-heading"><div><p className="eyebrow">PICK YOUR POISON</p><h2>THE GAME <em>ROOM</em></h2></div><p>오늘의 행운은 어떤 모습일까요?</p></div>
