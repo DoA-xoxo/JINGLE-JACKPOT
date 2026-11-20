@@ -142,6 +142,12 @@ BEGIN
   WHERE idempotency_key = p_idempotency_key;
 
   IF FOUND THEN
+    IF v_existing.account_id <> p_account_id
+       OR v_existing.game_code <> p_game_code
+       OR v_existing.wager <> p_wager THEN
+      RAISE EXCEPTION '이미 다른 요청에 사용된 요청 식별자입니다.';
+    END IF;
+
     SELECT balance INTO v_balance
     FROM public.point_wallets
     WHERE account_id = p_account_id;
