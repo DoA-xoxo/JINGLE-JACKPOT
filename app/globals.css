@@ -157,3 +157,9 @@
 
 /* Smaller reindeer runners with hooves resting on the lane line */
 .race-runner{top:-6px!important;font-size:19px!important;line-height:1!important}
+
+
+/* Keep the roulette's outer rim perfectly circular on narrow screens */
+.roulette-stage{width:min(100%,300px);max-width:300px;min-width:0}
+.roulette-wheel{display:block;width:100%;height:auto;aspect-ratio:1/1;min-width:0;flex:none;box-sizing:border-box}
+.roulette-wheel svg{display:block;width:100%;height:100%;aspect-ratio:1/1;max-width:none;box-sizing:border-box}
