@@ -180,3 +180,11 @@
 .game-card[role="button"]{cursor:pointer;transition:transform .18s ease,border-color .18s ease;}
 .game-card[role="button"]:hover{border-color:#b99457;}
 .game-card[role="button"]:focus-visible{outline:2px solid var(--gold);outline-offset:4px;}
+
+
+/* Center the game-card content after removing the separate ENTER GAME row */
+.game-card{justify-content:center;align-items:stretch;padding-top:58px;}
+.game-card-top{position:absolute;top:24px;left:24px;right:24px;}
+.game-card .game-symbol{margin:0 auto 8px;align-self:center;}
+.game-card .game-type,.game-card h3,.game-card>p{flex:0 0 auto;width:100%;}
+.game-card>p{margin-bottom:0;}
