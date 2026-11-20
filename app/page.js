@@ -127,7 +127,7 @@ export default function Home() {
         const nextRotation=rouletteRotation+1440+((landingAngle-current+360)%360);
         setRouletteRotation(nextRotation);
         setPlayResult(data);
-        await new Promise(resolve=>setTimeout(resolve,3400));
+        await new Promise(resolve=>setTimeout(resolve,5600));
       }else{
         await postGame(request);
       }
