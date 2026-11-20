@@ -23,12 +23,12 @@ function SlotMachine({ reels, spinning }) {
 
 function GiftBox({ number, selected, onClick, disabled, opened }) {
   return <button type="button" className={'gift-choice '+(selected?'selected ':'')+(opened?'opened':'')} onClick={onClick} disabled={disabled} aria-label={'선물 상자 '+number}>
-    <svg viewBox="0 0 100 112" role="img" aria-label="리본 선물 상자">
+    <svg viewBox="0 0 100 112" role="img" aria-label={opened?"뚜껑이 열린 선물 상자":"리본 선물 상자"}>
+      {opened&&<><path d="M17 42 7 19l68-13 12 24-60 12Z" fill="#d4b16e" stroke="#785b34" strokeWidth="2"/><path d="M42 34 36 12" stroke="#e6c77f" strokeWidth="6" strokeLinecap="round"/></>}
       <path d="M17 43h66v58H17z" fill="#8c303b" stroke="#54232a" strokeWidth="3"/>
       <path d="M12 35h76v15H12z" fill="#d4b16e" stroke="#785b34" strokeWidth="2"/>
       <path d="M45 35h12v66H45z" fill="#d9b66f"/>
-      <path d="M50 35C20 32 25 8 42 13c8 2 9 13 8 22M51 35c30-3 25-27 8-22-8 2-9 13-8 22" fill="none" stroke="#e6c77f" strokeWidth="7" strokeLinecap="round"/>
-      <path d="M24 59h52M24 88h52" stroke="#b75b5b" strokeWidth="2" opacity=".65"/>
+      {!opened&&<path d="M50 35C20 32 25 8 42 13c8 2 9 13 8 22M51 35c30-3 25-27 8-22-8 2-9 13-8 22" fill="none" stroke="#e6c77f" strokeWidth="7" strokeLinecap="round"/>}
     </svg><span>{opened?'OPENED':'BOX '+number}</span>
   </button>;
 }
@@ -45,12 +45,7 @@ function RouletteWheel({ spinning, result, pocketIndex }) {
 
 function Reindeer({ number, selected, winner, racing }) {
   return <div className={'reindeer-choice '+(selected?'selected ':'')+(winner?'winner ':'')+(racing?'racing':'')}>
-    <svg viewBox="0 0 140 100" role="img" aria-label={'순록 '+number}>
-      <path d="M42 56c-9-13-3-27 10-29 12-2 22 8 22 20l18 5 11-11 13 3-8 9 15 5-2 8-23-3-12 10-28-3-9 17h-7l3-19-12 17h-7l8-24z" fill="#895a3c" stroke="#573b2d" strokeWidth="3" strokeLinejoin="round"/>
-      <path d="M51 28 43 13l-2-11m2 11L31 8M62 27l7-15 1-10m-1 10 12-8" fill="none" stroke="#765039" strokeWidth="5" strokeLinecap="round"/>
-      <circle cx="65" cy="35" r="3" fill="#211a17"/><circle cx="111" cy="56" r="5" fill={number===1?'#c94336':'#30231d'}/>
-      <path d="M44 77l-3 17m19-15-1 15m35-18 5 17" stroke="#573b2d" strokeWidth="5" strokeLinecap="round"/>
-    </svg>
+    <span className="reindeer-emoji" role="img" aria-label={'순록 '+number}>🦌</span>
     <b>{number===1?'RUDOLPH':'REINDEER '+number}</b><small>{payoutLabels[number-1]} PAYOUT</small>{winner&&<em>WINNER!</em>}
   </div>;
 }
@@ -69,7 +64,7 @@ export default function Home() {
   const [user,setUser]=useState(null), [authOpen,setAuthOpen]=useState(false), [mode,setMode]=useState('login');
   const [nickname,setNickname]=useState(''), [password,setPassword]=useState(''), [busy,setBusy]=useState(false), [message,setMessage]=useState('');
   const [activeGame,setActiveGame]=useState(null), [wager,setWager]=useState('100'), [selection,setSelection]=useState('1');
-  const [playing,setPlaying]=useState(false), [playResult,setPlayResult]=useState(null), [slotReels,setSlotReels]=useState(['BELL','STAR','GIFT']);
+  const [playing,setPlaying]=useState(false), [playResult,setPlayResult]=useState(null), [slotReels,setSlotReels]=useState(['BELL','STAR','GIFT']), [raceOutcome,setRaceOutcome]=useState(null), [raceAnimating,setRaceAnimating]=useState(false);
   const [boards,setBoards]=useState({luckyStar:[],biggestJackpot:[]});
 
   async function refreshUser(){const res=await fetch('/api/me',{cache:'no-store'});const data=await res.json();setUser(data.user||null);}
@@ -82,17 +77,29 @@ export default function Home() {
     catch(err){setMessage(err.message);}finally{setBusy(false);}
   }
 
-  async function postGame(body){
+  async function postGame(body, deferResult=false){
     const res=await fetch('/api/games/play',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     const data=await res.json();if(!res.ok)throw new Error(data.error||'게임을 진행하지 못했습니다.');
-    setPlayResult(data);if(data.result&&data.result.balance!==undefined)await refreshUser();refreshBoards();return data;
+    if(!deferResult)setPlayResult(data);if(data.result&&data.result.balance!==undefined)await refreshUser();refreshBoards();return data;
   }
 
   async function playGame(e){
     e.preventDefault();if(!user){setActiveGame(null);setMode('login');setAuthOpen(true);return;}
     setPlaying(true);setPlayResult(null);
-    try{if(activeGame.code==='santas-slot')setSlotReels(['BELL','STAR','TREE']);const data=await postGame({gameCode:activeGame.code,wager,selection,requestId:crypto.randomUUID()});if(activeGame.code==='santas-slot'&&data.result&&data.result.outcome&&data.result.outcome.reels)setSlotReels(data.result.outcome.reels);}
-    catch(err){setPlayResult({error:err.message});}finally{setPlaying(false);}
+    try{
+      if(activeGame.code==='santas-slot')setSlotReels(['BELL','STAR','TREE']);
+      const request={gameCode:activeGame.code,wager,selection,requestId:crypto.randomUUID()};
+      if(activeGame.code==='reindeer-race'){
+        const data=await postGame(request,true);
+        const winner=data.result?.outcome?.winner;
+        setRaceOutcome(winner||null);setRaceAnimating(true);
+        await new Promise(resolve=>setTimeout(resolve,4200));
+        setRaceAnimating(false);setPlayResult(data);
+      }else{
+        const data=await postGame(request);
+        if(activeGame.code==='santas-slot'&&data.result&&data.result.outcome&&data.result.outcome.reels)setSlotReels(data.result.outcome.reels);
+      }
+    }catch(err){setPlayResult({error:err.message});setRaceAnimating(false);}finally{setPlaying(false);}
   }
 
   async function candleAction(action){
@@ -102,7 +109,7 @@ export default function Home() {
     catch(err){setPlayResult({error:err.message});}finally{setPlaying(false);}
   }
 
-  function openGame(game){setActiveGame(game);setWager('100');setSelection(game.code==='frozen-roulette'?'RED':'1');setPlayResult(null);setSlotReels(['BELL','STAR','GIFT']);}
+  function openGame(game){setActiveGame(game);setWager('100');setSelection(game.code==='frozen-roulette'?'RED':'1');setPlayResult(null);setSlotReels(['BELL','STAR','GIFT']);setRaceOutcome(null);setRaceAnimating(false);}
   async function logout(){await fetch('/api/auth/logout',{method:'POST'});setUser(null);}
 
   const result=playResult&&playResult.result;
@@ -138,7 +145,7 @@ export default function Home() {
       {activeGame.code==='santas-slot'&&<div className="game-art-panel"><SlotMachine reels={slotReels} spinning={playing}/><p className="visual-hint">세 개의 릴을 돌려 오늘의 행운을 확인하세요.</p></div>}
       {activeGame.code==='cursed-gift'&&<div className="game-art-panel"><p className="visual-hint">마음에 드는 선물 상자 하나를 선택하세요.</p><div className="gift-grid">{[1,2,3,4,5].map(n=><GiftBox key={n} number={n} selected={selection===String(n)} opened={!!(result&&result.outcome&&result.outcome.selectedBox===n)} onClick={()=>setSelection(String(n))} disabled={playing}/>)}</div></div>}
       {activeGame.code==='frozen-roulette'&&<div className="game-art-panel"><RouletteWheel spinning={playing} result={result&&result.outcome?result.outcome.result:null} pocketIndex={result&&result.outcome?result.outcome.pocketIndex:null}/><p className="visual-hint">먼저 행운을 걸 색을 선택하세요.</p><div className="color-bets">{[['RED','1.8×','red'],['GREEN','2.2×','green'],['GOLD','10×','gold']].map(item=><button type="button" key={item[0]} className={'color-bet '+item[2]+(selection===item[0]?' selected':'')} onClick={()=>setSelection(item[0])} disabled={playing}>{item[0]}<small>{item[1]}</small></button>)}</div></div>}
-      {activeGame.code==='reindeer-race'&&<div className="game-art-panel"><p className="visual-hint">우승할 순록을 선택하세요. 경주가 시작되면 결승선까지 달려갑니다!</p><div className="reindeer-grid">{[1,2,3,4].map(n=><button type="button" key={n} className="reindeer-button" onClick={()=>setSelection(String(n))} disabled={playing}><Reindeer number={n} selected={selection===String(n)} winner={!!(result&&result.outcome&&result.outcome.winner===n)} racing={playing}/></button>)}</div><div className={'race-track '+(playing?'race-running ':'')+(result&&result.outcome&&result.outcome.winner?'winner-'+result.outcome.winner:'')}><span>START</span><div className="race-lanes">{[1,2,3,4].map(n=><div className="race-lane" key={n}><b className={'race-runner runner-'+n}>🦌</b></div>)}</div><i>🏁</i></div></div>}
+      {activeGame.code==='reindeer-race'&&<div className="game-art-panel"><p className="visual-hint">우승할 순록을 선택하세요. 경주가 시작되면 결승선까지 달려갑니다!</p><div className="reindeer-grid">{[1,2,3,4].map(n=><button type="button" key={n} className="reindeer-button" onClick={()=>setSelection(String(n))} disabled={playing}><Reindeer number={n} selected={selection===String(n)} winner={!!(result&&result.outcome&&result.outcome.winner===n)} racing={playing}/></button>)}</div><div className={'race-track '+(raceAnimating?'race-running ':'')+(raceAnimating&&raceOutcome?'winner-'+raceOutcome:'')}><span>START</span><div className="race-lanes">{[1,2,3,4].map(n=><div className="race-lane" key={n}><b className={'race-runner runner-'+n}>🦌</b></div>)}</div><i>🏁</i></div></div>}
       {activeGame.code==='last-candle'&&<div className="game-art-panel candle-panel">
         {!result&&<p className="visual-hint">베팅 후 첫 번째 촛불을 밝혀 보세요.</p>}
         <div className="candle-row">{[1,2,3,4,5].map(n=><CandleArt key={n} lit={n<=candleStage} active={playing&&n===candleStage+1}/>)}</div>
