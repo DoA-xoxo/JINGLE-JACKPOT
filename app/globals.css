@@ -95,12 +95,17 @@
 .race-track>i{position:absolute;right:0;top:2px;height:78px;display:flex;align-items:center;background:#eee3cf;padding-left:3px;z-index:2}
 .race-lanes{width:calc(100% - 25px);display:flex;flex-direction:column;gap:3px}
 .race-lane{height:18px;position:relative;border-bottom:1px dashed #c3ae8a}
-.race-runner{position:absolute;left:0;top:-5px;font-style:normal;font-size:17px}
-.race-running .runner-1{animation:run-lane 1.05s linear infinite}
-.race-running .runner-2{animation:run-lane 1.25s linear infinite .08s}
-.race-running .runner-3{animation:run-lane .9s linear infinite .15s}
-.race-running .runner-4{animation:run-lane 1.4s linear infinite .05s}
-@keyframes run-lane{from{transform:translateX(0) scaleX(-1)}to{transform:translateX(420px) scaleX(-1)}}
+.race-runner{position:absolute;left:0;top:-5px;font-style:normal;font-size:17px;display:inline-block;transform:scaleX(-1)}
+.race-running .race-runner{animation:race-finish 3.8s cubic-bezier(.18,.62,.32,1) forwards}
+.race-running .runner-1{--race-stop:var(--lane-1-stop,55%)}
+.race-running .runner-2{--race-stop:var(--lane-2-stop,65%)}
+.race-running .runner-3{--race-stop:var(--lane-3-stop,75%)}
+.race-running .runner-4{--race-stop:var(--lane-4-stop,60%)}
+.race-running.winner-1 .runner-1{--race-stop:calc(100% - 22px)}
+.race-running.winner-2 .runner-2{--race-stop:calc(100% - 22px)}
+.race-running.winner-3 .runner-3{--race-stop:calc(100% - 22px)}
+.race-running.winner-4 .runner-4{--race-stop:calc(100% - 22px)}
+@keyframes race-finish{0%{left:0;transform:translateX(0) scaleX(-1)}100%{left:var(--race-stop);transform:translateX(0) scaleX(-1)}}
 
 .gift-choice.opened{background:#f4e3bf;border-color:#b99457;color:#8c303b}
 .gift-choice.opened svg{filter:drop-shadow(0 5px 5px #9b773d55);transform:translateY(-7px) rotate(-3deg)}
@@ -108,3 +113,11 @@
 .race-track.winner-2 .runner-2{left:calc(100% - 22px)}
 .race-track.winner-3 .runner-3{left:calc(100% - 22px)}
 .race-track.winner-4 .runner-4{left:calc(100% - 22px)}
+
+/* Reindeer race and gift reveal refinements */
+.reindeer-emoji{display:block;font-size:48px;line-height:1.35;transform:scaleX(-1);filter:none}
+.reindeer-choice.racing .reindeer-emoji{animation:reindeer-bounce .32s ease-in-out infinite alternate}
+.gift-choice.opened svg{filter:none;transform:none}
+.gift-choice.opened:hover svg,.gift-choice.opened.selected svg{filter:none;transform:none}
+.race-running .race-lanes{overflow:hidden}
+.race-lane{overflow:hidden}
