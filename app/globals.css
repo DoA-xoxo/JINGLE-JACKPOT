@@ -124,3 +124,17 @@
 /* Slot reels cycle through changing symbols while spinning */
 .slot-reel.is-spinning span{animation:slot-symbol-flash .16s steps(2,end) infinite}
 @keyframes slot-symbol-flash{0%{transform:translateY(-5px);opacity:.72}50%{transform:translateY(5px);opacity:1}100%{transform:translateY(-5px);opacity:.82}}
+
+
+/* Reindeer race: immediate movement, still finish positions after result */
+.race-track.race-running i{animation:none!important}
+.race-running .race-runner{animation:race-finish 3.8s linear forwards}
+.race-running .runner-1,.race-finished .runner-1{--race-stop:var(--lane-1-stop,55%)}
+.race-running .runner-2,.race-finished .runner-2{--race-stop:var(--lane-2-stop,65%)}
+.race-running .runner-3,.race-finished .runner-3{--race-stop:var(--lane-3-stop,75%)}
+.race-running .runner-4,.race-finished .runner-4{--race-stop:var(--lane-4-stop,60%)}
+.race-running.winner-1 .runner-1,.race-finished.winner-1 .runner-1{--race-stop:calc(100% - 22px)}
+.race-running.winner-2 .runner-2,.race-finished.winner-2 .runner-2{--race-stop:calc(100% - 22px)}
+.race-running.winner-3 .runner-3,.race-finished.winner-3 .runner-3{--race-stop:calc(100% - 22px)}
+.race-running.winner-4 .runner-4,.race-finished.winner-4 .runner-4{--race-stop:calc(100% - 22px)}
+.race-finished .race-runner{left:var(--race-stop)}
