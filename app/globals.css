@@ -116,7 +116,7 @@
 
 /* Reindeer race and gift reveal refinements */
 .reindeer-emoji{display:block;font-size:48px;line-height:1.35;transform:scaleX(-1);filter:none}
-.reindeer-choice.racing .reindeer-emoji{animation:reindeer-bounce .32s ease-in-out infinite alternate}
+.reindeer-choice.racing .reindeer-emoji{animation:reindeer-emoji-bounce .32s ease-in-out infinite alternate}@keyframes reindeer-emoji-bounce{from{transform:translateY(2px) scaleX(-1)}to{transform:translateY(-5px) scaleX(-1)}}
 .gift-choice.opened svg{filter:none;transform:none}
 .gift-choice.opened:hover svg,.gift-choice.opened.selected svg{filter:none;transform:none}
 .race-running .race-lanes{overflow:hidden}
