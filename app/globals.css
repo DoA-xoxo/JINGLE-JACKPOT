@@ -142,7 +142,7 @@
 /* Roulette keeps its accumulated angle between consecutive spins */
 .roulette-wheel.is-spinning{animation:roulette-wait-spin .7s linear infinite;transition:none}
 @keyframes roulette-wait-spin{to{transform:rotate(360deg)}}
-.roulette-wheel.is-result{animation:none;transition:transform 3.4s cubic-bezier(.12,.72,.12,1)}
+.roulette-wheel.is-result{animation:none;transition:transform 5.6s cubic-bezier(.08,.72,.12,1)}
 
 
 /* Race lanes: reset at the next play and keep the reindeer fully visible above the track line */
