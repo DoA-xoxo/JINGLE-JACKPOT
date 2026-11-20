@@ -25,7 +25,7 @@ export async function POST(request) {
     const wagerText = String(body.wager ?? '');
     const requestId = String(body.requestId || '');
     if (!allowedGames.has(gameCode)) return jsonError('지원하지 않는 게임입니다.');
-    if (!/^\\d+$/.test(wagerText)) return jsonError('베팅 금액은 1 이상의 정수로 입력해 주세요.');
+    if (!/^\d+$/.test(wagerText)) return jsonError('베팅 금액은 1 이상의 정수로 입력해 주세요.');
 
     const wager = BigInt(wagerText);
     // Technical safe-integer ceiling keeps even a 10x payout exactly representable.
