@@ -3,11 +3,11 @@
 import { useEffect, useState } from 'react';
 
 const games = [
-  { no: '01', title: "SANTA'S SLOT", type: 'THE CLASSIC', desc: '세 개의 릴이 멈추는 순간, 산타의 선물이 결정돼요.', symbol: '✳', color: 'red' },
-  { no: '02', title: 'THE CURSED GIFT', type: 'MYSTERY BOX', desc: '무엇이 들어 있을까요? 행운일까, 꽝일까?', symbol: '♜', color: 'green' },
-  { no: '03', title: 'FROZEN ROULETTE', type: 'SPIN & WIN', desc: '차가운 운명의 룰렛을 돌려 보세요.', symbol: '❄', color: 'gold' },
-  { no: '04', title: 'REINDEER RACE', type: 'RACE GAME', desc: '루돌프의 질주에 포인트를 걸어 보세요.', symbol: '♞', color: 'green' },
-  { no: '05', title: 'THE LAST CANDLE', type: 'RISK OR STOP', desc: '한 번 더 도전할까요, 여기서 멈출까요?', symbol: '♧', color: 'red' },
+  { no: '01', title: "SANTA'S SLOT", type: 'THE CLASSIC', desc: '세 개의 릴이 멈추는 순간, 산타의 선물이 결정돼요.', rule: '세 그림 일치 8배 · 두 그림 일치 1.2배 · 그 외 0배', symbol: '✳', color: 'red' },
+  { no: '02', title: 'THE CURSED GIFT', type: 'MYSTERY BOX', desc: '무엇이 들어 있을까요? 행운일까, 꽝일까?', rule: '잭팟 2.5배 · 행운 1.5배 · 작은 선물 1배 · 꽝 0배', symbol: '♜', color: 'green' },
+  { no: '03', title: 'FROZEN ROULETTE', type: 'SPIN & WIN', desc: '차가운 운명의 룰렛을 돌려 보세요.', rule: 'RED 6칸 1.8배 · GREEN 5칸 2.2배 · GOLD 1칸 10배', symbol: '❄', color: 'gold' },
+  { no: '04', title: 'REINDEER RACE', type: 'RACE GAME', desc: '루돌프의 질주에 포인트를 걸어 보세요.', rule: '순록별 우승 확률 40% / 30% / 20% / 10% · 배당 2.2배 / 3배 / 4.5배 / 8배', symbol: '♞', color: 'green' },
+  { no: '05', title: 'THE LAST CANDLE', type: 'RISK OR STOP', desc: '한 번 더 도전할까요, 여기서 멈출까요?', rule: '촛불마다 성공 확률 80% · 1~5개 모두 성공해야 1.15~3배 지급', symbol: '♧', color: 'red' },
 ];
 const events = [
   { title: 'GOLDEN BELL', sub: 'A golden surprise' },
