@@ -35,6 +35,8 @@ The migration:
 3. Adds the service-role-only `play_jingle_game` RPC. It debits the wager, credits the payout, and records the round in one database transaction with idempotency protection.
 4. Adds the service-role-only `get_jingle_leaderboards` RPC.
 
+The second migration creates persistent candle sessions and the `play_jingle_candle_step` RPC. The wager is debited once; each next candle has an 80% chance to light; the player can stop to collect the current multiplier or continue up to five candles. Completed and lost rounds are recorded once for leaderboard totals.
+
 Neither migration creates, replaces, or resets the shared wallet tables. Review the new SQL before applying it.
 
 ## Game rules
