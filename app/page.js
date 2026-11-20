@@ -8,6 +8,7 @@ const games = [
   { no:'03', title:'FROZEN ROULETTE', type:'SPIN & WIN', desc:'원하는 색에 포인트를 걸고 얼어붙은 룰렛을 돌려 보세요.', rule:'RED 1.8 배 · GREEN 2.2 배 · GOLD 10 배', color:'gold', code:'frozen-roulette' },
   { no:'04', title:'REINDEER RACE', type:'RACE GAME', desc:'네 마리 순록 중 우승할 주자를 선택하세요.', rule:'우승 확률 40 % / 30 % / 20 % / 10 % · 배당 2.2 / 3 / 4.5 / 8 배', color:'green', code:'reindeer-race' },
   { no:'05', title:'THE LAST CANDLE', type:'RISK OR STOP', desc:'촛불을 하나씩 밝혀 보세요. 멈출지, 다음 촛불에 도전할지는 당신의 선택!', rule:'촛불마다 성공 확률 80 % · 최대 다섯 번 · 성공 단계에 따라 배당 증가', color:'red', code:'last-candle' },
+  { no:'06', title:'ODD OR EVEN', type:'GUESS THE NUMBER', desc:'뒤집힌 카드에 숨겨진 숫자가 홀수일지 짝수일지 맞혀 보세요.', rule:'정답이면 베팅 포인트의 2 배 지급 · 오답이면 베팅 포인트 전액 소멸', color:'gold', code:'odd-even' },
 ];
 const slotIcons = { BELL:'🔔', STAR:'⭐', TREE:'🎄', GIFT:'🎁', CANDY:'🍬' };
 const payoutLabels = ['×2.2','×3','×4.5','×8'];
@@ -63,7 +64,7 @@ function RouletteWheel({ spinning, result, pocketIndex, rotation }) {
     if (animationRef.current && result) {
       const active = animationRef.current;
       const elapsed = Number(active.currentTime || 0);
-      const startAngle = baseRotationRef.current + elapsed / 1250 * 360;
+      const startAngle = baseRotationRef.current + (elapsed % 1250) / 1250 * 360;
       active.cancel();
       let targetAngle = Number(rotation || 0);
       while (targetAngle < startAngle + 720) targetAngle += 360;
@@ -72,7 +73,7 @@ function RouletteWheel({ spinning, result, pocketIndex, rotation }) {
           { transform: 'rotate(' + startAngle + 'deg)' },
           { transform: 'rotate(' + targetAngle + 'deg)' }
         ],
-        { duration: 4400, easing: 'cubic-bezier(0.12, 0.58, 0.18, 1)', fill: 'forwards' }
+        { duration: 4600, easing: 'cubic-bezier(0.18, 0.72, 0.16, 1)', fill: 'forwards' }
       );
       animationRef.current = settle;
       settle.onfinish = () => {
@@ -184,7 +185,7 @@ export default function Home() {
     catch(err){setPlayResult({error:err.message});}finally{setPlaying(false);}
   }
 
-  function openGame(game){setActiveGame(game);setWager('100');setSelection(game.code==='frozen-roulette'?'RED':'1');setPlayResult(null);setSlotReels(['BELL','STAR','GIFT']);setRaceOutcome(null);setRaceAnimating(false);setRouletteRotation(0);}
+  function openGame(game){setActiveGame(game);setWager('100');setSelection(game.code==='frozen-roulette'?'RED':game.code==='odd-even'?'EVEN':'1');setPlayResult(null);setSlotReels(['BELL','STAR','GIFT']);setRaceOutcome(null);setRaceAnimating(false);setRouletteRotation(0);}
   async function logout(){await fetch('/api/auth/logout',{method:'POST'});setUser(null);}
 
   const result=playResult&&playResult.result;
@@ -205,7 +206,7 @@ export default function Home() {
     </section>
 
     <section className="section" id="games"><div className="section-heading"><div><p className="eyebrow">PICK YOUR POISON</p><h2>THE GAME <em>ROOM</em></h2></div><p>오늘의 행운은 어떤 모습일까요?</p></div>
-      <div className="game-grid">{games.map(g=><article className={'game-card '+g.color} key={g.no} role="button" tabIndex={0} aria-label={g.title+' 게임 열기'} onClick={()=>openGame(g)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openGame(g);}}}><div className="game-card-top"><span>GAME NO. {g.no}</span><span>✦</span></div><div className="game-symbol">{g.code==='santas-slot'?'🎰':g.code==='cursed-gift'?'🎁':g.code==='frozen-roulette'?'🎡':g.code==='reindeer-race'?'🦌':'🕯️'}</div><div className="game-type">{g.type}</div><h3>{g.title}</h3><p>{g.desc}</p></article>)}</div>
+      <div className="game-grid">{games.map(g=><article className={'game-card '+g.color} key={g.no} role="button" tabIndex={0} aria-label={g.title+' 게임 열기'} onClick={()=>openGame(g)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openGame(g);}}}><div className="game-card-top"><span>GAME NO. {g.no}</span><span>✦</span></div><div className="game-symbol">{g.code==='santas-slot'?'🎰':g.code==='cursed-gift'?'🎁':g.code==='frozen-roulette'?'🎡':g.code==='reindeer-race'?'🦌':g.code==='odd-even'?'🃏':'🕯️'}</div><div className="game-type">{g.type}</div><h3>{g.title}</h3><p>{g.desc}</p></article>)}</div>
     </section>
 
     <section className="events-section lottery-section" id="lottery"><div className="lottery-copy"><p className="eyebrow">ONLY THIS SEASON</p><h2>CHRISTMAS <em>LOTTERY</em></h2><p>크리스마스 시즌에 찾아오는 단 하나의 특별 추첨.</p><span className="coming">COMING SOON</span></div><div className="lottery-ticket"><span>✦ THE CHRISTMAS DRAW ✦</span><strong>LUCKY<br/>NUMBER</strong><i>NO. 1225</i><small>ONE TICKET · ONE WISH</small></div></section>
@@ -220,6 +221,7 @@ export default function Home() {
       {activeGame.code==='santas-slot'&&<div className="game-art-panel"><SlotMachine reels={slotReels} spinning={playing}/><p className="visual-hint">세 개의 릴을 돌려 오늘의 행운을 확인하세요.</p></div>}
       {activeGame.code==='cursed-gift'&&<div className="game-art-panel"><p className="visual-hint">마음에 드는 선물 상자 하나를 선택하세요.</p><div className="gift-grid">{[1,2,3,4,5].map(n=><GiftBox key={n} number={n} selected={selection===String(n)} opened={!!(result&&result.outcome&&result.outcome.selectedBox===n)} onClick={()=>setSelection(String(n))} disabled={playing}/>)}</div></div>}
       {activeGame.code==='frozen-roulette'&&<div className="game-art-panel"><RouletteWheel spinning={!!(playResult&&playResult.rouletteAnimating)} result={result&&result.outcome?result.outcome.result:null} pocketIndex={result&&result.outcome?result.outcome.pocketIndex:null} rotation={rouletteRotation}/><p className="visual-hint">먼저 행운을 걸 색을 선택하세요.</p><div className="color-bets">{[['RED','1.8×','red'],['GREEN','2.2×','green'],['GOLD','10×','gold']].map(item=><button type="button" key={item[0]} className={'color-bet '+item[2]+(selection===item[0]?' selected':'')} onClick={()=>setSelection(item[0])} disabled={playing}>{item[0]}<small>{item[1]}</small></button>)}</div></div>}
+      {activeGame.code==='odd-even'&&<div className="game-art-panel odd-even-panel"><p className="visual-hint">카드 뒷면을 보고 숫자의 홀짝을 예측하세요.</p><div className={'number-card '+(result?'revealed':playing?'flipping':'')}><div className="number-card-inner"><div className="number-card-back"><span>✦</span><strong>J</strong><span>JINGLE JACKPOT</span></div><div className="number-card-front"><small>YOUR NUMBER</small><strong>{result?.outcome?.number ?? '?'}</strong><span>{result?.outcome?.number%2===0?'EVEN':'ODD'}</span></div></div></div><div className="odd-even-bets"><button type="button" className={'odd-even-choice '+(selection==='ODD'?'selected':'')} onClick={()=>setSelection('ODD')} disabled={playing}>홀수 <small>ODD</small></button><button type="button" className={'odd-even-choice '+(selection==='EVEN'?'selected':'')} onClick={()=>setSelection('EVEN')} disabled={playing}>짝수 <small>EVEN</small></button></div></div>}
       {activeGame.code==='reindeer-race'&&<div className="game-art-panel"><p className="visual-hint">우승할 순록을 선택하세요. 경주가 시작되면 결승선까지 달려갑니다!</p><div className="reindeer-grid">{[1,2,3,4].map(n=><button type="button" key={n} className="reindeer-button" onClick={()=>setSelection(String(n))} disabled={playing}><Reindeer number={n} selected={selection===String(n)} winner={!!(result&&result.outcome&&result.outcome.winner===n)} racing={playing}/></button>)}</div><div className={'race-track '+(raceAnimating?'race-running ':(!raceAnimating&&raceOutcome&&result?'race-finished ':''))+(raceOutcome?'winner-'+raceOutcome:'')}><span>START</span><div className="race-lanes">{[1,2,3,4].map(n=><div className="race-lane" key={n}><b className={'race-runner runner-'+n}>🦌</b></div>)}</div><i>🏁</i></div></div>}
       {activeGame.code==='last-candle'&&<div className="game-art-panel candle-panel">
         {!result&&<p className="visual-hint">베팅 후 첫 번째 촛불을 밝혀 보세요.</p>}
