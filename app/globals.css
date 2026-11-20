@@ -88,3 +88,16 @@
 .lottery-ticket i{font:italic 16px 'Playfair Display',serif;color:#9b783f;margin-bottom:12px}
 @media(max-width:850px){.lottery-section{padding:55px 7%;grid-template-columns:1fr 220px}.game-modal{width:min(100%,580px)}}
 @media(max-width:540px){.game-modal{padding:30px 20px;max-height:94vh}.game-art-panel{padding:14px 9px}.gift-grid{gap:2px}.gift-choice{font-size:7px}.gift-choice svg{max-width:62px}.slot-machine-visual{width:90%;padding:12px 15px}.slot-reel{height:67px}.slot-reel span{font-size:34px}.reindeer-grid{gap:2px}.reindeer-choice{min-height:105px}.reindeer-choice b{font-size:6px}.reindeer-choice small{font-size:6px}.candle-actions{grid-template-columns:1fr}.lottery-section{grid-template-columns:1fr;gap:32px;text-align:center}.lottery-ticket{width:210px}.lottery-copy .coming{margin-top:4px}}
+
+.roulette-wheel.is-result{transition:transform 2.8s cubic-bezier(.12,.72,.12,1)}
+.race-track{height:auto;min-height:92px;position:relative;align-items:stretch;padding:7px 0 5px}
+.race-track>span{position:absolute;left:0;top:-9px;background:#eee3cf;padding-right:5px}
+.race-track>i{position:absolute;right:0;top:2px;height:78px;display:flex;align-items:center;background:#eee3cf;padding-left:3px;z-index:2}
+.race-lanes{width:calc(100% - 25px);display:flex;flex-direction:column;gap:3px}
+.race-lane{height:18px;position:relative;border-bottom:1px dashed #c3ae8a}
+.race-runner{position:absolute;left:0;top:-5px;font-style:normal;font-size:17px}
+.race-running .runner-1{animation:run-lane 1.05s linear infinite}
+.race-running .runner-2{animation:run-lane 1.25s linear infinite .08s}
+.race-running .runner-3{animation:run-lane .9s linear infinite .15s}
+.race-running .runner-4{animation:run-lane 1.4s linear infinite .05s}
+@keyframes run-lane{from{transform:translateX(0) scaleX(1)}to{transform:translateX(420px) scaleX(1)}}
