@@ -125,10 +125,10 @@ export default function Home() {
         const landingAngle=Number.isInteger(pocketIndex)?(360-(pocketIndex*30+15)+360)%360:0;
         const current=((rouletteRotation%360)+360)%360;
         const clockwiseDelta=(landingAngle-current+360)%360;
-        const nextRotation=rouletteRotation+1440+clockwiseDelta;
+        const nextRotation=rouletteRotation+1080+clockwiseDelta;
         setRouletteRotation(nextRotation);
         setPlayResult(data);
-        await new Promise(resolve=>setTimeout(resolve,5600));
+        await new Promise(resolve=>setTimeout(resolve,8800));
       }else{
         await postGame(request);
       }
