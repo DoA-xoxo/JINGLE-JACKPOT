@@ -101,3 +101,10 @@
 .race-running .runner-3{animation:run-lane .9s linear infinite .15s}
 .race-running .runner-4{animation:run-lane 1.4s linear infinite .05s}
 @keyframes run-lane{from{transform:translateX(0) scaleX(1)}to{transform:translateX(420px) scaleX(1)}}
+
+.gift-choice.opened{background:#f4e3bf;border-color:#b99457;color:#8c303b}
+.gift-choice.opened svg{filter:drop-shadow(0 5px 5px #9b773d55);transform:translateY(-7px) rotate(-3deg)}
+.race-track.winner-1 .runner-1{left:calc(100% - 22px)}
+.race-track.winner-2 .runner-2{left:calc(100% - 22px)}
+.race-track.winner-3 .runner-3{left:calc(100% - 22px)}
+.race-track.winner-4 .runner-4{left:calc(100% - 22px)}
