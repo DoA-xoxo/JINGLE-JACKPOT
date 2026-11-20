@@ -247,3 +247,12 @@
   animation:none!important;
   transition:transform 8.8s cubic-bezier(.12,.58,.18,1)!important;
 }
+
+
+/* Roulette motion is driven by the Web Animations API so the live spin can smoothly decelerate from its exact current angle. */
+.roulette-wheel,
+.roulette-wheel.is-spinning,
+.roulette-wheel.is-result{
+  animation:none!important;
+  transition:none!important;
+}
