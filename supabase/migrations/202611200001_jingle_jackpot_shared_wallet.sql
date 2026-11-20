@@ -200,3 +200,41 @@ GRANT EXECUTE ON FUNCTION public.play_jingle_game(uuid, text, bigint, bigint, js
 ALTER TABLE public.jingle_game_rounds ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON TABLE public.jingle_game_rounds FROM anon, authenticated;
 GRANT SELECT ON TABLE public.jingle_game_rounds TO service_role;
+
+
+-- 4) Server-only leaderboard aggregation. "Winnings" are gross payouts:
+-- sum(payout) and max(payout), without subtracting wagers.
+CREATE OR REPLACE FUNCTION public.get_jingle_leaderboards()
+RETURNS jsonb
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path TO 'public'
+AS $function$
+  WITH totals AS (
+    SELECT account_id, sum(payout)::bigint AS total_winnings, max(payout)::bigint AS biggest_win
+    FROM public.jingle_game_rounds
+    GROUP BY account_id
+  ),
+  lucky AS (
+    SELECT p.nickname, t.total_winnings
+    FROM totals t
+    JOIN public.user_profiles p ON p.account_id = t.account_id
+    ORDER BY t.total_winnings DESC, p.nickname ASC
+    LIMIT 10
+  ),
+  jackpot AS (
+    SELECT p.nickname, t.biggest_win
+    FROM totals t
+    JOIN public.user_profiles p ON p.account_id = t.account_id
+    ORDER BY t.biggest_win DESC, p.nickname ASC
+    LIMIT 10
+  )
+  SELECT jsonb_build_object(
+    'luckyStar', coalesce((SELECT jsonb_agg(jsonb_build_object('nickname', nickname, 'winnings', total_winnings)) FROM lucky), '[]'::jsonb),
+    'biggestJackpot', coalesce((SELECT jsonb_agg(jsonb_build_object('nickname', nickname, 'winnings', biggest_win)) FROM jackpot), '[]'::jsonb)
+  );
+$function$;
+
+REVOKE ALL ON FUNCTION public.get_jingle_leaderboards() FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.get_jingle_leaderboards() FROM anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.get_jingle_leaderboards() TO service_role;
