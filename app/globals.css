@@ -188,3 +188,62 @@
 .game-card .game-symbol{margin:0 auto 8px;align-self:center;}
 .game-card .game-type,.game-card h3,.game-card>p{flex:0 0 auto;width:100%;}
 .game-card>p{margin-bottom:0;}
+
+
+/* Roulette: force a square stage; keep the label outside the wheel's sizing box. */
+.roulette-stage{
+  position:relative!important;
+  display:block!important;
+  width:min(100%,280px)!important;
+  max-width:280px!important;
+  min-width:0!important;
+  height:auto!important;
+  aspect-ratio:1 / 1!important;
+  padding:0!important;
+  margin:7px auto 34px!important;
+  flex:0 0 auto!important;
+  box-sizing:border-box!important;
+}
+.roulette-wheel{
+  position:absolute!important;
+  inset:0!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  aspect-ratio:1 / 1!important;
+  padding:5px!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+  border-radius:50%!important;
+}
+.roulette-wheel svg{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  aspect-ratio:1 / 1!important;
+  border-radius:50%!important;
+}
+.roulette-pointer{top:-5px!important;}
+.roulette-label{
+  position:absolute!important;
+  left:0!important;
+  right:0!important;
+  bottom:-25px!important;
+  margin:0!important;
+  text-align:center!important;
+}
+.roulette-wheel.is-spinning{
+  animation:roulette-wait-spin 2.8s linear infinite!important;
+  transition:none!important;
+}
+@keyframes roulette-wait-spin{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+.roulette-wheel.is-result{
+  animation:none!important;
+  transition:transform 8.8s cubic-bezier(.12,.58,.18,1)!important;
+}
