@@ -41,11 +41,21 @@ function GiftBox({ number, selected, onClick, disabled, opened }) {
 
 function RouletteWheel({ spinning, result, pocketIndex, rotation }) {
   const colors = ['#8c303b','#284b3c','#8c303b','#284b3c','#8c303b','#284b3c','#8c303b','#284b3c','#8c303b','#284b3c','#8c303b','#c49b50'];
-  return <div className="roulette-stage"><div className="roulette-pointer">▼</div><div className={'roulette-wheel '+(spinning?'is-spinning':result?'is-result':'')} style={{transform:'rotate('+(rotation||0)+'deg'),...(spinning?{'--roulette-target':(rotation||0)+'deg'}:{})}}>
-    <svg viewBox="0 0 300 300" role="img" aria-label="12칸 크리스마스 룰렛">
-      {colors.map((color,i)=><path key={i} d="M150 150 L150 12 A138 138 0 0 1 219 30 Z" fill={color} stroke="#f0dfbd" strokeWidth="2" transform={'rotate('+(i*30)+' 150 150)'}/>)}
-      <circle cx="150" cy="150" r="29" fill="#e7d3a9" stroke="#76502f" strokeWidth="5"/><circle cx="150" cy="150" r="9" fill="#7a2934"/>
-    </svg></div><div className="roulette-label">FROZEN FORTUNE</div></div>;
+  const wheelStyle = {
+    transform: 'rotate(' + (rotation || 0) + 'deg)',
+    '--roulette-target': (rotation || 0) + 'deg'
+  };
+  return <div className="roulette-stage">
+    <div className="roulette-pointer">▼</div>
+    <div className={'roulette-wheel ' + (spinning ? 'is-spinning' : result ? 'is-result' : '')} style={wheelStyle}>
+      <svg viewBox="0 0 300 300" role="img" aria-label="12칸 크리스마스 룰렛">
+        {colors.map((color, i) => <path key={i} d="M150 150 L150 12 A138 138 0 0 1 219 30 Z" fill={color} stroke="#f0dfbd" strokeWidth="2" transform={'rotate(' + (i * 30) + ' 150 150)'} />)}
+        <circle cx="150" cy="150" r="29" fill="#e7d3a9" stroke="#76502f" strokeWidth="5" />
+        <circle cx="150" cy="150" r="9" fill="#7a2934" />
+      </svg>
+    </div>
+    <div className="roulette-label">FROZEN FORTUNE</div>
+  </div>;
 }
 
 function Reindeer({ number, selected, winner, racing }) {
