@@ -3,14 +3,14 @@
 import { useEffect, useState } from 'react';
 
 const games = [
-  { no:'01', title:"SANTA'S SLOT", type:'THE CLASSIC', desc:'세 개의 릴이 멈추는 순간, 산타의 선물이 결정돼요.', rule:'세 그림 일치 8배 · 두 그림 일치 1.2배 · 그 외 0배', color:'red', code:'santas-slot' },
-  { no:'02', title:'THE CURSED GIFT', type:'MYSTERY BOX', desc:'다섯 개의 선물 상자 중 행운이 숨은 상자를 골라 보세요.', rule:'잭팟 2.5배 · 행운 1.5배 · 작은 선물 1배 · 꽝 0배', color:'green', code:'cursed-gift' },
-  { no:'03', title:'FROZEN ROULETTE', type:'SPIN & WIN', desc:'원하는 색에 포인트를 걸고 얼어붙은 룰렛을 돌려 보세요.', rule:'RED 1.8배 · GREEN 2.2배 · GOLD 10배', color:'gold', code:'frozen-roulette' },
-  { no:'04', title:'REINDEER RACE', type:'RACE GAME', desc:'네 마리 순록 중 우승할 주자를 선택하세요.', rule:'우승 확률 40% / 30% / 20% / 10% · 배당 2.2 / 3 / 4.5 / 8배', color:'green', code:'reindeer-race' },
-  { no:'05', title:'THE LAST CANDLE', type:'RISK OR STOP', desc:'촛불을 하나씩 밝혀 보세요. 멈출지, 다음 불꽃에 도전할지는 당신의 선택!', rule:'촛불마다 성공 확률 80% · 최대 다섯 번 · 성공 단계에 따라 배당 증가', color:'red', code:'last-candle' },
+  { no:'01', title:"SANTA'S SLOT", type:'THE CLASSIC', desc:'세 개의 릴이 멈추는 순간, 산타의 선물이 결정돼요.', rule:'세 그림 일치 8 배 · 두 그림 일치 1.2 배 · 그 외 0 배', color:'red', code:'santas-slot' },
+  { no:'02', title:'THE CURSED GIFT', type:'MYSTERY BOX', desc:'다섯 개의 선물 상자 중 행운이 숨은 상자를 골라 보세요.', rule:'잭팟 2.5 배 · 행운 1.5 배 · 작은 선물 1 배 · 꽝 0 배', color:'green', code:'cursed-gift' },
+  { no:'03', title:'FROZEN ROULETTE', type:'SPIN & WIN', desc:'원하는 색에 포인트를 걸고 얼어붙은 룰렛을 돌려 보세요.', rule:'RED 1.8 배 · GREEN 2.2 배 · GOLD 10 배', color:'gold', code:'frozen-roulette' },
+  { no:'04', title:'REINDEER RACE', type:'RACE GAME', desc:'네 마리 순록 중 우승할 주자를 선택하세요.', rule:'우승 확률 40 % / 30 % / 20 % / 10 % · 배당 2.2 / 3 / 4.5 / 8 배', color:'green', code:'reindeer-race' },
+  { no:'05', title:'THE LAST CANDLE', type:'RISK OR STOP', desc:'촛불을 하나씩 밝혀 보세요. 멈출지, 다음 촛불에 도전할지는 당신의 선택!', rule:'촛불마다 성공 확률 80 % · 최대 다섯 번 · 성공 단계에 따라 배당 증가', color:'red', code:'last-candle' },
 ];
 const slotIcons = { BELL:'🔔', STAR:'⭐', TREE:'🎄', GIFT:'🎁', CANDY:'🍬' };
-const payoutLabels = ['2.2×','3×','4.5×','8×'];
+const payoutLabels = ['×2.2','×3','×4.5','×8'];
 
 function SlotMachine({ reels, spinning }) {
   const [spinSymbols,setSpinSymbols]=useState(reels);
@@ -156,7 +156,7 @@ export default function Home() {
     <section className="events-section lottery-section" id="lottery"><div className="lottery-copy"><p className="eyebrow">ONLY THIS SEASON</p><h2>CHRISTMAS <em>LOTTERY</em></h2><p>크리스마스 시즌에 찾아오는 단 하나의 특별 추첨.</p><span className="coming">COMING SOON</span></div><div className="lottery-ticket"><span>✦ THE CHRISTMAS DRAW ✦</span><strong>LUCKY<br/>NUMBER</strong><i>NO. 1225</i><small>ONE TICKET · ONE WISH</small></div></section>
 
     <section className="hall" id="rankings"><p className="eyebrow">A PLACE FOR THE LUCKIEST</p><h2>HALL OF <em>FAME</em></h2><div className="ranking-grid cumulative-ranking"><article><span className="rank-icon">♛</span><div><small>LUCKY STAR</small><h3>CUMULATIVE WINNINGS</h3><p>누적 당첨금 랭킹</p>{boards.luckyStar&&boards.luckyStar.slice(0,10).map((x,i)=><p key={x.nickname}>{i+1}. {x.nickname} · {Number(x.winnings).toLocaleString()} P</p>)}</div><b>{boards.luckyStar&&boards.luckyStar.length?'TOP 10':'—'}</b></article></div></div></section>
-    <footer><div className="footer-mark">JINGLE <i>✦</i> JACKPOT!</div><p>A LITTLE CHRISTMAS, A LOT OF LUCK!</p><small>© 2026 JINGLE JACKPOT! · VIRTUAL POINTS HAVE NO CASH VALUE</small></footer>
+    <footer><div className="footer-mark">JINGLE <i>✦</i> JACKPOT!</div><p>A LITTLE CHRISTMAS, A LOT OF LUCK!</p><small>ⓒ胡桃劇場</small></footer>
 
     {activeGame&&<div className="modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget&&!playing)setActiveGame(null);}}><form className="auth-modal game-modal" onSubmit={activeGame.code==='last-candle'?e=>{e.preventDefault();candleAction('start');}:playGame}>
       <button type="button" className="modal-close" onClick={()=>setActiveGame(null)} disabled={playing}>×</button>
@@ -170,9 +170,9 @@ export default function Home() {
         {!result&&<p className="visual-hint">베팅 후 첫 번째 촛불을 밝혀 보세요.</p>}
         <div className="candle-row">{[1,2,3,4,5].map(n=><CandleArt key={n} lit={n<=candleStage} active={playing&&n===candleStage+1}/>)}</div>
         {result&&<div className="candle-status">
-          {result.status==='active'&&<><strong>{candleStage}번째 촛불이 켜졌어요!</strong><p>지금 멈추면 {({1:'1.15',2:'1.45',3:'1.85',4:'2.4',5:'3'})[candleStage]}배를 받을 수 있어요.</p></>}
-          {result.status==='lost'&&<><strong>촛불이 꺼졌어요…</strong><p>이번 라운드 당첨금은 0P입니다.</p></>}
-          {result.status==='completed'&&<><strong>촛불 도전을 마쳤어요!</strong><p>{Number(result.payout||0).toLocaleString()}P 지급 완료</p></>}
+          {result.status==='active'&&<><strong>{candleStage} 번째 촛불이 켜졌어요!</strong><p>지금 멈추면 {({1:'1.15',2:'1.45',3:'1.85',4:'2.4',5:'3'})[candleStage]} 배를 받을 수 있어요.</p></>}
+          {result.status==='lost'&&<><strong>촛불이 꺼졌어요…</strong><p>이번 라운드 당첨금은 0 P입니다.</p></>}
+          {result.status==='completed'&&<><strong>촛불 도전을 마쳤어요!</strong><p>{Number(result.payout||0).toLocaleString()} P 지급 완료</p></>}
         </div>}
       </div>}
 
@@ -182,9 +182,9 @@ export default function Home() {
       {activeGame.code!=='last-candle'&&result&&<div className="play-result"><strong>{playResult.resultLabel}</strong><p>BET {Number(result.wager).toLocaleString()} P · PRIZE {Number(result.payout).toLocaleString()} P</p><p>NEW BALANCE {Number(result.balance).toLocaleString()} P</p></div>}
       {activeGame.code==='last-candle'&&result&&result.status!=='active'&&<div className="play-result"><strong>{playResult.resultLabel}</strong><p>BET {Number(result.wager).toLocaleString()} P · PRIZE {Number(result.payout||0).toLocaleString()} P</p><p>NEW BALANCE {Number(result.balance).toLocaleString()} P</p><button type="button" className="secondary-game-btn" onClick={()=>setPlayResult(null)}>PLAY AGAIN</button></div>}
       {activeGame.code==='last-candle'&&result&&result.status==='active'?<div className="candle-actions"><button type="button" className="modal-submit secondary-game-btn" onClick={()=>candleAction('stop')} disabled={playing}>STOP & COLLECT</button><button type="button" className="modal-submit" onClick={()=>candleAction('continue')} disabled={playing}>{playing?'THE FLAME IS FLICKERING...':candleStage===4?'LIGHT THE FINAL CANDLE':'LIGHT THE NEXT CANDLE'}</button></div>:<button className="modal-submit" disabled={playing||!wager||Number(wager)<1||(activeGame.code==='last-candle'&&!!result)}>{playing?'THE MAGIC IS HAPPENING...':activeGame.code==='last-candle'?'LIGHT THE FIRST CANDLE':'PLAY NOW'}</button>}
-      <p className="auth-note">당첨금은 베팅 원금을 포함한 지급액입니다. 가상 포인트는 현금 가치가 없습니다.</p>
+      <p className="auth-note">당첨금은 원금을 포함한 지급액입니다. 가상 포인트는 현금 가치가 없습니다.</p>
     </form></div>}
 
-    {authOpen&&<div className="modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget){setAuthOpen(false);setMessage('');}}}><form className="auth-modal" onSubmit={submitAuth}><button type="button" className="modal-close" onClick={()=>{setAuthOpen(false);setMessage('');}}>×</button><p className="eyebrow">WELCOME TO THE PARLOUR</p><h2>{mode==='login'?'GOOD TO SEE YOU.':'JOIN THE CLUB.'}</h2><p className="auth-note">기존 gift / gacha 계정으로 로그인하거나 새 계정을 만들어 주세요.</p><label>YOUR ID<input value={nickname} onChange={e=>setNickname(e.target.value)} maxLength={20} autoComplete="username" required/></label><label>PASSWORD<input type="password" value={password} onChange={e=>setPassword(e.target.value)} maxLength={128} autoComplete={mode==='login'?'current-password':'new-password'} required/></label>{message&&<p className="form-message">{message}</p>}<button className="modal-submit" disabled={busy}>{busy?'PLEASE WAIT...':mode==='login'?'LET ME IN':'CREATE ACCOUNT'}</button><p className="switch-mode">{mode==='login'?'처음 오셨나요?':'이미 계정이 있나요?'} <button type="button" onClick={()=>{setMode(mode==='login'?'register':'login');setMessage('');}}>{mode==='login'?'회원가입':'로그인'}</button></p></form></div>}
+    {authOpen&&<div className="modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget){setAuthOpen(false);setMessage('');}}}><form className="auth-modal" onSubmit={submitAuth}><button type="button" className="modal-close" onClick={()=>{setAuthOpen(false);setMessage('');}}>×</button><p className="eyebrow">WELCOME TO THE PARLOUR</p><h2>{mode==='login'?'GOOD TO SEE YOU.':'JOIN THE CLUB.'}</h2><p className="auth-note">기존 계정으로 로그인하거나 새 계정을 만들어 주세요.</p><label>NICKNAME<input value={nickname} onChange={e=>setNickname(e.target.value)} maxLength={20} autoComplete="username" required/></label><label>PASSWORD<input type="password" value={password} onChange={e=>setPassword(e.target.value)} maxLength={128} autoComplete={mode==='login'?'current-password':'new-password'} required/></label>{message&&<p className="form-message">{message}</p>}<button className="modal-submit" disabled={busy}>{busy?'PLEASE WAIT...':mode==='login'?'LET ME IN':'CREATE ACCOUNT'}</button><p className="switch-mode">{mode==='login'?'처음 오셨나요?':'이미 계정이 있나요?'} <button type="button" onClick={()=>{setMode(mode==='login'?'register':'login');setMessage('');}}>{mode==='login'?'회원가입':'로그인'}</button></p></form></div>}
   </main>;
 }
