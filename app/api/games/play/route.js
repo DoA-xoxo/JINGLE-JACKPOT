@@ -2,8 +2,18 @@ import { getSupabaseAdmin, getUserId, jsonError } from '@/lib/server';
 import { resolveGame } from '@/lib/game-engine';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const allowedGames = new Set(['santas-slot', 'cursed-gift', 'frozen-roulette', 'reindeer-race', 'last-candle']);
+
+function getResultLabel(gameCode, outcome) {
+  if (gameCode === 'santas-slot') return ({ TRIPLE: 'THREE OF A KIND!', PAIR: 'A LUCKY PAIR!', MISS: 'NO MATCH THIS TIME' })[outcome.result] || 'THE REELS HAVE STOPPED';
+  if (gameCode === 'cursed-gift') return ({ 'GOLDEN STAR': 'THE GOLDEN GIFT!', 'LUCKY BELL': 'A LUCKY GIFT!', 'LITTLE GIFT': 'A LITTLE PRESENT', 'EMPTY BOX': 'THE CURSED BOX...' })[outcome.prize] || 'THE BOX IS OPEN';
+  if (gameCode === 'frozen-roulette') return outcome.result === outcome.selection ? 'THE WHEEL FAVOURS YOU!' : `THE WHEEL LANDED ON ${outcome.result}`;
+  if (gameCode === 'reindeer-race') return outcome.winner === outcome.selected ? `REINDEER ${outcome.winner} WINS!` : `REINDEER ${outcome.winner} TAKES THE LEAD!`;
+  if (gameCode === 'last-candle') return outcome.success ? 'ALL CANDLES ARE BURNING!' : `THE FLAME WENT OUT AT ${outcome.lit + 1}...`;
+  return 'THE GAME IS OVER';
+}
 
 export async function POST(request) {
   try {
@@ -15,17 +25,20 @@ export async function POST(request) {
     const wagerText = String(body.wager ?? '');
     const requestId = String(body.requestId || '');
     if (!allowedGames.has(gameCode)) return jsonError('지원하지 않는 게임입니다.');
-    if (!/^\d+$/.test(wagerText) || BigInt(wagerText) < 1n || BigInt(wagerText) > 9007199254740991n) {
-      return jsonError('베팅 금액은 1 이상의 정수로 입력해 주세요.');
+    if (!/^\\d+$/.test(wagerText)) return jsonError('베팅 금액은 1 이상의 정수로 입력해 주세요.');
+
+    const wager = BigInt(wagerText);
+    // Technical safe-integer ceiling keeps even a 10x payout exactly representable.
+    if (wager < 1n || wager > 900719925474099n) return jsonError('베팅 금액을 안전한 정수 범위로 입력해 주세요.');
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestId)) {
+      return jsonError('요청 식별자가 올바르지 않습니다.');
     }
-    if (!/^[0-9a-f-]{36}$/i.test(requestId)) return jsonError('요청 식별자가 올바르지 않습니다.');
 
     const supabase = getSupabaseAdmin();
     const { data: profile, error: profileError } = await supabase
       .from('user_profiles').select('account_id').eq('id', profileId).single();
     if (profileError || !profile?.account_id) return jsonError('회원 정보를 확인하지 못했습니다.', 401);
 
-    const wager = BigInt(wagerText);
     const { payout, outcome } = resolveGame(gameCode, wager, body.selection);
     const idempotencyKey = `jingle:${profile.account_id}:${requestId}`;
     const { data, error } = await supabase.rpc('play_jingle_game', {
@@ -40,10 +53,17 @@ export async function POST(request) {
       if (/포인트가 부족합니다/.test(error.message)) return jsonError(error.message, 409);
       throw error;
     }
-    const savedOutcome = data?.outcome || outcome;
+
+    const saved = typeof data === 'string' ? JSON.parse(data) : data;
+    const savedOutcome = saved?.outcome || outcome;
     return Response.json({
-      result: data,
-      resultLabel: savedOutcome.result || savedOutcome.prize || (savedOutcome.success ? 'ALL CANDLES LIT' : savedOutcome.winner ? `WINNER: ${savedOutcome.winner}` : savedOutcome.lit !== undefined ? `${savedOutcome.lit}/${savedOutcome.stages} CANDLES` : 'RESULT'),
+      result: {
+        ...saved,
+        wager: Number(saved?.wager ?? wager),
+        payout: Number(saved?.payout ?? payout),
+        balance: Number(saved?.balance ?? 0),
+      },
+      resultLabel: getResultLabel(gameCode, savedOutcome),
     });
   } catch (error) {
     console.error('Jingle Jackpot game failed:', error);
